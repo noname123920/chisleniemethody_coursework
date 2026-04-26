@@ -1,9 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.21)  21 APR 2026 23:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.21)  22 APR 2026 16:00
 entering extended mode
  restricted \write18 enabled.
+ file:line:error style messages enabled.
  %&-line parsing enabled.
-**readme.tex
-(./readme.tex
+**/Users/Eduard/Documents/–∫—É—Ä—Å–æ–≤–∞—è/readme.tex
+(/Users/Eduard/Documents/–∫—É—Ä—Å–æ–≤–∞—è/readme.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/article.cls
@@ -22,16 +23,13 @@ File: size12.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
 \abovecaptionskip=\skip49
 \belowcaptionskip=\skip50
 \bibindent=\dimen148
-)
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/fontenc.sty
+) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
-
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/cyrillic/t2aenc.def
+ (/usr/local/texlive/2026basic/texmf-dist/tex/latex/cyrillic/t2aenc.def
 File: t2aenc.def 2023/11/07 v1.0k Cyrillic encoding definition file
 Now handling font encoding T2A ...
 ... processing UTF-8 mapping file for font encoding T2A
-
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/t2aenc.dfu
+ (/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/t2aenc.dfu
 File: t2aenc.dfu 2022/06/07 v1.3c UTF-8 support
    defining Unicode char U+00A4 (decimal 164)
    defining Unicode char U+00A7 (decimal 167)
@@ -232,63 +230,44 @@ File: t2aenc.dfu 2022/06/07 v1.3c UTF-8 support
    defining Unicode char U+FB05 (decimal 64261)
    defining Unicode char U+FB06 (decimal 64262)
 ))
-LaTeX Font Info:    Trying to load font information for T2A+cmr on input line 1
-16.
-
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/cyrillic/t2acmr.fd
+LaTeX Font Info:    Trying to load font information for T2A+cmr on input line 116.
+ (/usr/local/texlive/2026basic/texmf-dist/tex/latex/cyrillic/t2acmr.fd
 File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
-))
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/inputenc.sty
+)) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2024/02/08 v1.3d Input encoding file
 \inpenc@prehook=\toks17
 \inpenc@posthook=\toks18
-)
-(/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2026/02/14 v26.3 The multilingual framework for LuaLaTeX, pdfLaT
-eX and XeLaTeX
+) (/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2026/02/14 v26.3 The multilingual framework for LuaLaTeX, pdfLaTeX and XeLaTeX
 \babel@savecnt=\count283
-LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input li
-ne 2078.
-LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input li
-ne 2080.
-LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input lin
-e 2082.
-LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input lin
-e 2083.
-LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) 
-on input line 2084.
-LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) 
-on input line 2086.
-LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) 
-on input line 2111.
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input line 2078.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input line 2080.
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input line 2082.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input line 2083.
+LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) on input line 2084.
+LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) on input line 2086.
+LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) on input line 2111.
 \U@D=\dimen149
 \l@unhyphenated=\language33
-
-(/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel/txtbabel.def)
+ (/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel/txtbabel.def)
 \bbl@readstream=\read2
 \bbl@dirlevel=\count284
-
-(/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel/locale/ru/babel-russ
-ian.tex)
+ (/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel/locale/ru/babel-russian.tex)
 Package babel Info: Importing font and identification data for russian
 (babel)             from babel-ru.ini. Reported on input line 4330.
-
-(/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel-russian/russianb.ldf
+ (/usr/local/texlive/2026basic/texmf-dist/tex/generic/babel-russian/russianb.ldf
 File: russianb.ldf 2021/01/10 1.3m Russian support for the Babel system
 Language: russian 2020/09/09 1.3k Russian support for the Babel system
 Package babel Info: Making " an active character on input line 124.
 Package babel Info: Default for \cyrdash is provided on input line 163.
 )) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
-
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/keyval.sty
+ (/usr/local/texlive/2026basic/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \KV@toks@=\toks19
-)
-(/usr/local/texlive/2026basic/texmf-dist/tex/generic/iftex/ifvtex.sty
+) (/usr/local/texlive/2026basic/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
-
-(/usr/local/texlive/2026basic/texmf-dist/tex/generic/iftex/iftex.sty
+ (/usr/local/texlive/2026basic/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 ))
 \Gm@cnth=\count285
@@ -303,25 +282,21 @@ Package: iftex 2024/12/12 v1.0g TeX engine tests
 \Gm@layouthoffset=\dimen156
 \Gm@layoutvoffset=\dimen157
 \Gm@dimlist=\toks20
-)
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsmath.sty
+) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2025/07/09 v2.17z AMS math features
 \@mathmargin=\skip51
 
 For additional information on amsmath, use the `?' option.
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2024/11/17 v2.01 AMS text
-
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsgen.sty
+ (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks21
 \ex@=\dimen158
-))
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsbsy.sty
+)) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen159
-)
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsopn.sty
+) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
 \inf@bad=\count288
@@ -371,16 +346,15 @@ LaTeX Info: Redefining \Relbar on input line 970.
 \mathdisplay@stack=\toks25
 LaTeX Info: Redefining \[ on input line 2950.
 LaTeX Info: Redefining \] on input line 2951.
-)
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/tools/indentfirst.sty
+) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/tools/indentfirst.sty
 Package: indentfirst 2023/07/02 v1.03 Indent first paragraph (DPC)
-)
-(/usr/local/texlive/2026basic/texmf-dist/tex/latex/l3backend/l3backend-pdftex.d
-ef
+) (/usr/local/texlive/2026basic/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count300
+) (./readme.aux
+Package babel Info: 'russian' activates 'russian' shorthands.
+(babel)             Reported on input line 5.
 )
-No file readme.aux.
 \openout1 = `readme.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
@@ -399,9 +373,8 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
 LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
-Package babel Info: 'russian' activates 'russian' shorthands.
-(babel)             Reported on input line 11.
 LaTeX Info: Redefining \th on input line 11.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -438,44 +411,25 @@ LaTeX Info: Redefining \th on input line 11.
 
 [1
 
-{/usr/local/texlive/2026basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 106--106
-[]\T2A/cmr/m/n/12 ÏÂÚÓ‰ ÍÓ-ÌÂ˜-Ì˚ı
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[1] [2] (./readme.aux)
+{/usr/local/texlive/2026basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [1] [2] (./readme.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3845 strings out of 468477
- 61579 string characters out of 5445368
- 482386 words of memory out of 5000000
- 32553 multiletter control sequences out of 15000+600000
- 637208 words of font info for 60 fonts, out of 8000000 for 9000
+ 3850 strings out of 468477
+ 61760 string characters out of 5445368
+ 478377 words of memory out of 5000000
+ 32554 multiletter control sequences out of 15000+600000
+ 637944 words of font info for 61 fonts, out of 8000000 for 9000
  735 hyphenation exceptions out of 8191
- 57i,11n,65p,1092b,273s stack positions out of 10000i,1000n,20000p,200000b,200000s
- </usr/local/texlive/2026basic/texmf-dist/fonts/pk/ljfour/lh/lh-t2a/lati1200.
-600pk> </Users/Eduard/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknap
-pen/ec/tcrm1200.600pk> </usr/local/texlive/2026basic/texmf-dist/fonts/pk/ljfour
-/lh/lh-t2a/labx1728.600pk> </Users/Eduard/Library/texlive/2026basic/texmf-var/f
-onts/pk/ljfour/lh/lh-t2a/labx1440.600pk> </usr/local/texlive/2026basic/texmf-di
-st/fonts/pk/ljfour/lh/lh-t2a/larm1200.600pk> </usr/local/texlive/2026basic/texm
-f-dist/fonts/pk/ljfour/lh/lh-t2a/labx1200.600pk></usr/local/texlive/2026basic/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026bas
-ic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/202
-6basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/
-2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texli
-ve/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on readme.pdf (3 pages, 109857 bytes).
+ 57i,5n,65p,1118b,205s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ </Users/Eduard/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1200.600pk> </usr/local/texlive/2026basic/texmf-dist/fonts/pk/ljfour/lh/lh-t2a/labx1728.600pk> </Users/Eduard/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/lh/lh-t2a/labx1440.600pk> </usr/local/texlive/2026basic/texmf-dist/fonts/pk/ljfour/lh/lh-t2a/larm1200.600pk> </usr/local/texlive/2026basic/texmf-dist/fonts/pk/ljfour/lh/lh-t2a/labx1200.600pk></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
+Output written on readme.pdf (3 pages, 127002 bytes).
 PDF statistics:
  252 PDF objects out of 1000 (max. 8388607)
- 47 compressed objects within 1 object stream
+ 49 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
