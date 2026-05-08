@@ -1,0 +1,10 @@
+\babel@toc {russian}{}\relax 
+\contentsline {section}{Введение}{2}{section*.2}%
+\contentsline {section}{\numberline {1}Реализация метода конечных разностей для задачи Дирихле}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Численное решение}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Алгоритм метода}{3}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Программная реализация на Octave}{3}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Результаты сгущения сетки}{5}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Анализ точности}{5}{subsection.1.5}%
+\contentsline {subsection}{\numberline {1.6}График численного и точного решения}{5}{subsection.1.6}%
+\contentsline {subsection}{\numberline {1.7}График погрешности}{6}{subsection.1.7}%

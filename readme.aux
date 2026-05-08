@@ -2,35 +2,28 @@
 \providecommand \babel@aux [2]{\global \let \babel@toc \@gobbletwo }
 \@nameuse{bbl@beforestart}
 \catcode `"\active 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
 \babel@aux{russian}{}
-\@writefile{toc}{\contentsline {section}{Введение}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Постановка краевой задачи}{2}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Описание метода}{3}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.1}Идея метода конечных разностей}{3}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.2}Построение сетки}{3}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.3}Интегро-интерполяционный метод (метод баланса)}{3}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.4}Аппроксимация граничных условий}{5}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.4.1}Условия первого рода (Дирихле)}{5}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.4.2}Условия второго рода (Неймана)}{5}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {0.4.3}Условия третьего рода (смешанные)}{6}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.5}Формирование СЛАУ}{6}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.6}Метод прогонки}{7}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.7}Сходимость и точность}{7}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {0.8}Оценка погрешности по правилу Рунге}{7}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Алгоритм численного решения}{9}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Вычислительный эксперимент}{11}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Сходимость численного решения на тестовой задаче}}{11}{}\protected@file@percent }
-\newlabel{tab:test}{{1}{11}{}{table.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Численное решение задачи с условиями Дирихле}}{12}{}\protected@file@percent }
-\newlabel{fig:dirichlet_solution}{{1}{12}{}{figure.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Оценка погрешности по правилу Рунге (условия Дирихле)}}{12}{}\protected@file@percent }
-\newlabel{fig:dirichlet_error}{{2}{12}{}{figure.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Численное решение задачи с условиями Неймана}}{13}{}\protected@file@percent }
-\newlabel{fig:neumann_solution}{{3}{13}{}{figure.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Оценка погрешности по правилу Рунге (условия Неймана)}}{13}{}\protected@file@percent }
-\newlabel{fig:neumann_error}{{4}{13}{}{figure.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Численное решение смешанной задачи}}{13}{}\protected@file@percent }
-\newlabel{fig:robin_solution}{{5}{13}{}{figure.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Оценка погрешности по правилу Рунге (смешанные условия)}}{13}{}\protected@file@percent }
-\newlabel{fig:robin_error}{{6}{13}{}{figure.6}{}}
-\gdef \@abspage@last{14}
+\@writefile{toc}{\contentsline {section}{Введение}{2}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Реализация метода конечных разностей для задачи Дирихле}{3}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Численное решение}{3}{subsection.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Алгоритм метода}{3}{subsection.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Программная реализация на Octave}{3}{subsection.1.3}\protected@file@percent }
+\newlabel{lst:dirichlet}{{1}{3}{Код №1}{lstlisting.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Код №1}}{3}{lstlisting.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4}Результаты сгущения сетки}{5}{subsection.1.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Сходимость метода при сгущении сетки}}{5}{table.caption.3}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:convergence}{{1}{5}{Сходимость метода при сгущении сетки}{table.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.5}Анализ точности}{5}{subsection.1.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Сравнение оценок погрешности}}{5}{table.caption.4}\protected@file@percent }
+\newlabel{tab:error}{{2}{5}{Сравнение оценок погрешности}{table.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.6}График численного и точного решения}{5}{subsection.1.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Сравнение численного и точного решений для задачи Дирихле}}{6}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:solution}{{1}{6}{Сравнение численного и точного решений для задачи Дирихле}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.7}График погрешности}{6}{subsection.1.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Распределение погрешности по узлам сетки}}{7}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:error}{{2}{7}{Распределение погрешности по узлам сетки}{figure.caption.6}{}}
+\gdef \@abspage@last{8}
