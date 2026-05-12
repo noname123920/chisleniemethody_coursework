@@ -1,10 +1,24 @@
 \babel@toc {russian}{}\relax 
 \contentsline {section}{Введение}{2}{section*.2}%
-\contentsline {section}{\numberline {1}Реализация метода конечных разностей для задачи Дирихле}{3}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Численное решение}{3}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Алгоритм метода}{3}{subsection.1.2}%
-\contentsline {subsection}{\numberline {1.3}Программная реализация на Octave}{3}{subsection.1.3}%
-\contentsline {subsection}{\numberline {1.4}Результаты сгущения сетки}{5}{subsection.1.4}%
-\contentsline {subsection}{\numberline {1.5}Анализ точности}{5}{subsection.1.5}%
-\contentsline {subsection}{\numberline {1.6}График численного и точного решения}{5}{subsection.1.6}%
-\contentsline {subsection}{\numberline {1.7}График погрешности}{6}{subsection.1.7}%
+\contentsline {section}{\numberline {1}Постановка краевой задачи с различными граничными условиями}{3}{section.1}%
+\contentsline {section}{\numberline {2}Условия разрешимости и единственности}{4}{section.2}%
+\contentsline {section}{\numberline {3}Вывод разностных формул, реализованных в программе}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Внутренние узлы ($i=2,\dots ,N-1$)}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Левая граница ($x=a$, $i=1$)}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Правая граница ($x=b$, $i=N$)}{6}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Реализация метода конечных разностей для задачи с граничными условиями первого рода (Дирихле)}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Программная реализация на Octave}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Результаты сгущения сетки}{8}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}График численного решения}{9}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}График оценки погрешности}{10}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Реализация метода конечных разностей для задачи с граничными условиями второго рода (Неймана)}{11}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Программная реализация на Octave}{11}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Результаты сгущения сетки}{12}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}График численного решения}{13}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}График оценки погрешности}{14}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Реализация метода конечных разностей для задачи с граничными условиями третьего рода (Робена)}{15}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Программная реализация на Octave}{15}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Результаты сгущения сетки}{16}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}График численного решения}{17}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}График оценки погрешности}{18}{subsection.6.4}%
+\contentsline {section}{Список литературы}{19}{figure.caption.11}%

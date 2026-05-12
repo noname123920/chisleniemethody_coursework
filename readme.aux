@@ -7,23 +7,56 @@
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \babel@aux{russian}{}
 \@writefile{toc}{\contentsline {section}{Введение}{2}{section*.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {1}Реализация метода конечных разностей для задачи Дирихле}{3}{section.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Численное решение}{3}{subsection.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Алгоритм метода}{3}{subsection.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Программная реализация на Octave}{3}{subsection.1.3}\protected@file@percent }
-\newlabel{lst:dirichlet}{{1}{3}{Код №1}{lstlisting.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Код №1}}{3}{lstlisting.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4}Результаты сгущения сетки}{5}{subsection.1.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Сходимость метода при сгущении сетки}}{5}{table.caption.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Постановка краевой задачи с различными граничными условиями}{3}{section.1}\protected@file@percent }
+\newlabel{eq:ode_main}{{1}{3}{Постановка краевой задачи с различными граничными условиями}{equation.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Условия разрешимости и единственности}{4}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Вывод разностных формул, реализованных в программе}{5}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Внутренние узлы ($i=2,\dots  ,N-1$)}{5}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Левая граница ($x=a$, $i=1$)}{5}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Правая граница ($x=b$, $i=N$)}{6}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Реализация метода конечных разностей для задачи с граничными условиями первого рода (Дирихле)}{7}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Программная реализация на Octave}{7}{subsection.4.1}\protected@file@percent }
+\newlabel{lst:dirichlet}{{1}{7}{Code No.1}{lstlisting.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Code No.1}}{7}{lstlisting.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Результаты сгущения сетки}{8}{subsection.4.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Сходимость метода при сгущении сетки}}{8}{table.caption.3}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{tab:convergence}{{1}{5}{Сходимость метода при сгущении сетки}{table.caption.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.5}Анализ точности}{5}{subsection.1.5}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Сравнение оценок погрешности}}{5}{table.caption.4}\protected@file@percent }
-\newlabel{tab:error}{{2}{5}{Сравнение оценок погрешности}{table.caption.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.6}График численного и точного решения}{5}{subsection.1.6}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Сравнение численного и точного решений для задачи Дирихле}}{6}{figure.caption.5}\protected@file@percent }
-\newlabel{fig:solution}{{1}{6}{Сравнение численного и точного решений для задачи Дирихле}{figure.caption.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.7}График погрешности}{6}{subsection.1.7}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Распределение погрешности по узлам сетки}}{7}{figure.caption.6}\protected@file@percent }
-\newlabel{fig:error}{{2}{7}{Распределение погрешности по узлам сетки}{figure.caption.6}{}}
-\gdef \@abspage@last{8}
+\newlabel{tab:convergence}{{1}{8}{Сходимость метода при сгущении сетки}{table.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}График численного решения}{9}{subsection.4.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Численное решение задачи Дирихле}}{9}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:solution}{{1}{9}{Численное решение задачи Дирихле}{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}График оценки погрешности}{10}{subsection.4.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Распределение оценки погрешности по узлам сетки}}{10}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:error}{{2}{10}{Распределение оценки погрешности по узлам сетки}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Реализация метода конечных разностей для задачи с граничными условиями второго рода (Неймана)}{11}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Программная реализация на Octave}{11}{subsection.5.1}\protected@file@percent }
+\newlabel{lst:neumann}{{2}{11}{Code No.2}{lstlisting.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}{\ignorespaces Code No.2}}{11}{lstlisting.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Результаты сгущения сетки}{12}{subsection.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Сходимость метода при сгущении сетки}}{13}{table.caption.6}\protected@file@percent }
+\newlabel{tab:convergence2}{{2}{13}{Сходимость метода при сгущении сетки}{table.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}График численного решения}{13}{subsection.5.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Численное решение задачи Неймана}}{13}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:solution2}{{3}{13}{Численное решение задачи Неймана}{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}График оценки погрешности}{14}{subsection.5.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Распределение оценки погрешности по узлам сетки}}{14}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:error2}{{4}{14}{Распределение оценки погрешности по узлам сетки}{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Реализация метода конечных разностей для задачи с граничными условиями третьего рода (Робена)}{15}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Программная реализация на Octave}{15}{subsection.6.1}\protected@file@percent }
+\newlabel{lst:robin}{{3}{15}{Code No.3}{lstlisting.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}{\ignorespaces Code No.3}}{15}{lstlisting.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Результаты сгущения сетки}{16}{subsection.6.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Сходимость метода при сгущении сетки}}{17}{table.caption.9}\protected@file@percent }
+\newlabel{tab:convergence3}{{3}{17}{Сходимость метода при сгущении сетки}{table.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}График численного решения}{17}{subsection.6.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Численное решение задачи с условиями Робена}}{17}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:solution3}{{5}{17}{Численное решение задачи с условиями Робена}{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}График оценки погрешности}{18}{subsection.6.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Распределение оценки погрешности по узлам сетки}}{18}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:error3}{{6}{18}{Распределение оценки погрешности по узлам сетки}{figure.caption.11}{}}
+\bibcite{demidovich}{1}
+\bibcite{amosov}{2}
+\bibcite{mudrov}{3}
+\bibcite{samarskii2}{4}
+\@writefile{toc}{\contentsline {section}{Список литературы}{19}{figure.caption.11}\protected@file@percent }
+\gdef \@abspage@last{20}
