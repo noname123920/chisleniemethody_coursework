@@ -170,71 +170,220 @@
 \newpage
 
 \section{Вывод разностных формул, реализованных в программе}
-В данном разделе показано, как из непрерывной краевой задачи получаются коэффициенты матрицы СЛАУ, заполняемые в коде Octave. Для аппроксимации граничных условий используется метод мнимых (ghost) узлов.
+В данном разделе показан полный вывод коэффициентов матрицы СЛАУ, получаемых при дискретизации краевой задачи методом конечных разностей. Для аппроксимации граничных условий используется метод фиктивных (мнимых) узлов \textit{(ghost nodes)}. Все выкладки приведены в соответствии с реализованным кодом Octave.
+
+\subsection{Постановка задачи и введение сетки}
+Рассматривается линейная двухточечная краевая задача:
+\begin{equation}
+    -\bigl(k(x)\,u'(x)\bigr)' + q(x)\,u(x) = f(x), \quad a < x < b,
+    \label{eq:cont}
+\end{equation}
+с граничными условиями первого, второго или третьего рода. Функции \(k(x)>0\), \(q(x)\ge 0\), \(f(x)\) непрерывны на \([a,b]\).
+
+Вводится равномерная сетка:
+\begin{equation}
+    x_i = a + (i-1)h, \quad i=1,2,\dots,N, \qquad h = \frac{b-a}{N-1}.
+\end{equation}
+Обозначения: \(u_i = u(x_i)\), \(q_i = q(x_i)\), \(f_i = f(x_i)\). Значения \(k\) в полуцелых узлах:
+\begin{equation}
+    k_{i+1/2} = k(x_i + h/2), \qquad k_{i-1/2} = k(x_i - h/2).
+\end{equation}
 
 \subsection{Внутренние узлы (\texorpdfstring{$i=2,\dots,N-1$}{i=2,...,N-1})}
-Заменяем производные центральными разностями с использованием значений $k$ на полуцелых шагах $x_{i\pm 1/2} = x_i \pm h/2$:
-\begin{equation}
-    -\frac{k_{i+1/2}\frac{u_{i+1}-u_i}{h} - k_{i-1/2}\frac{u_i-u_{i-1}}{h}}{h^2} + q_i u_i = f_i.
-\end{equation}
-Группируя слагаемые при $u_{i-1}, u_i, u_{i+1}$, получаем:
-\begin{equation}
-    -\frac{k_{i-1/2}}{h^2}u_{i-1} + \left(\frac{k_{i-1/2}+k_{i+1/2}}{h^2} + q_i\right)u_i - \frac{k_{i+1/2}}{h^2}u_{i+1} = f_i.
-\end{equation}
-Это в точности соответствует циклу в коде:
-\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,language=Octave,frame=none]
-a_diag(i-1) = -kmid(i-1)/h^2;          % k_{i-1/2} = k(x_i - h/2)
-c_diag(i)   = -kmid(i)/h^2;            % k_{i+1/2} = k(x_i + h/2)
-b_diag(i)   = (kmid(i-1)+kmid(i))/h^2 + qv(i);
-d_vec(i)    = fv(i);
+Запишем уравнение \eqref{eq:cont} в узле \(x_i\):
+\[
+-\bigl(k u'\bigr)'(x_i) + q_i u_i = f_i.
+\]
+Производную потока аппроксимируем центральной разностью:
+\[
+\bigl(k u'\bigr)'(x_i) \approx \frac{ (k u')_{i+1/2} - (k u')_{i-1/2} }{h}.
+\]
+Значения \(u'\) в полуцелых узлах заменяем разностями вперёд/назад:
+\[
+u'_{i+1/2} \approx \frac{u_{i+1}-u_i}{h}, \qquad
+u'_{i-1/2} \approx \frac{u_i-u_{i-1}}{h}.
+\]
+Тогда:
+\[
+(k u')_{i+1/2} \approx k_{i+1/2}\frac{u_{i+1}-u_i}{h}, \qquad
+(k u')_{i-1/2} \approx k_{i-1/2}\frac{u_i-u_{i-1}}{h}.
+\]
+Подставляем в разностное уравнение:
+\[
+-\frac{ k_{i+1/2}\dfrac{u_{i+1}-u_i}{h} - k_{i-1/2}\dfrac{u_i-u_{i-1}}{h} }{h} + q_i u_i = f_i.
+\]
+После приведения к общему знаменателю:
+\[
+-\frac{ k_{i+1/2}(u_{i+1}-u_i) - k_{i-1/2}(u_i-u_{i-1}) }{h^2} + q_i u_i = f_i.
+\]
+Раскрываем скобки и группируем коэффициенты:
+\begin{align}
+&-\frac{k_{i+1/2}u_{i+1} - k_{i+1/2}u_i - k_{i-1/2}u_i + k_{i-1/2}u_{i-1}}{h^2} + q_i u_i = f_i,\nonumber\\
+&-\frac{k_{i-1/2}}{h^2}u_{i-1} + \left(\frac{k_{i-1/2}+k_{i+1/2}}{h^2} + q_i\right)u_i - \frac{k_{i+1/2}}{h^2}u_{i+1} = f_i.
+\label{eq:int}
+\end{align}
+Формула \eqref{eq:int} — основное разностное уравнение для внутренних узлов. В программной реализации оно выглядит следующим образом (цикл по \(i=2,\dots,N-1\)):
+
+\begin{lstlisting}[caption={Фрагмент кода: внутренние узлы},label={lst:inner}]
+for i = 2:N-1
+    a_diag(i-1) = -kmid(i-1)/h^2;          % k_{i-1/2}
+    c_diag(i)   = -kmid(i)/h^2;            % k_{i+1/2}
+    b_diag(i)   = (kmid(i-1)+kmid(i))/h^2 + qv(i);
+    d_vec(i)    = fv(i);
+end
 \end{lstlisting}
 
 \subsection{Левая граница (\texorpdfstring{$x=a$}{x=a}, \texorpdfstring{$i=1$}{i=1})}
-Вводим мнимый узел $u_0$ в точке $x_0 = a-h$. Центральная разность для производной: $u'(a) \approx \frac{u_2-u_0}{2h}$.
+Вводим фиктивный узел \(x_0 = a-h\) со значением \(u_0\). Уравнение для \(i=1\) формально совпадает с \eqref{eq:int}, но содержит \(u_0\), которое выражается через граничное условие.
 
-\textbf{Условия Неймана:} $u'(a)=\gamma \Rightarrow u_0 = u_2 - 2h\gamma$.
-Подставляем $u_0$ в разностное уравнение для $i=1$:
-\begin{equation*}
-    -\frac{k_{1/2}(u_2-u_1) - k_{-1/2}(u_1-(u_2-2h\gamma))}{h^2} + q_1 u_1 = f_1,
-\end{equation*}
-где $k_{-1/2}=k(a-h/2)$, $k_{1/2}=k(a+h/2)$. Раскрываем скобки:
-\begin{equation*}
-    \left(\frac{k_{-1/2}+k_{1/2}}{h^2} + q_1\right)u_1 - \frac{k_{-1/2}+k_{1/2}}{h^2}u_2 = f_1 + \frac{2k_{-1/2}}{h}\gamma.
-\end{equation*}
-Полученные коэффициенты в точности повторяют строки кода:
-\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,language=Octave,frame=none]
+\subsubsection{Условие Неймана: \texorpdfstring{$u'(a)=\gamma$}{u'(a)=gamma}}
+Центральная разность для производной:
+\[
+u'(a) \approx \frac{u_2-u_0}{2h} = \gamma \quad\Rightarrow\quad u_0 = u_2 - 2h\gamma.
+\]
+Подставляем в уравнение для \(i=1\):
+\[
+-\frac{ k_{1/2}(u_2-u_1) - k_{-1/2}\bigl(u_1 - (u_2-2h\gamma)\bigr) }{h^2} + q_1 u_1 = f_1.
+\]
+Упрощаем числитель:
+\[
+k_{1/2}(u_2-u_1) - k_{-1/2}(u_1-u_2+2h\gamma) = (k_{1/2}+k_{-1/2})u_2 - (k_{1/2}+k_{-1/2})u_1 - 2h k_{-1/2}\gamma.
+\]
+После подстановки и переноса слагаемого с \(\gamma\) в правую часть:
+\[
+\frac{k_{-1/2}+k_{1/2}}{h^2}u_1 - \frac{k_{-1/2}+k_{1/2}}{h^2}u_2 + q_1 u_1 = f_1 + \frac{2k_{-1/2}}{h}\gamma.
+\]
+Окончательно:
+\begin{equation}
+\boxed{\left(\frac{k_{-1/2}+k_{1/2}}{h^2} + q_1\right)u_1 - \frac{k_{-1/2}+k_{1/2}}{h^2}u_2 = f_1 + \frac{2k_{-1/2}}{h}\gamma.}
+\label{eq:neumann_left}
+\end{equation}
+В коде это реализовано так:
+
+\begin{lstlisting}[caption={Фрагмент кода: левая граница (Нейман)},label={lst:neumann_left}]
+k_minus_half = k(a - h/2);
+k_plus_half  = k(a + h/2);
 b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1);
 c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
 d_vec(1)  = fv(1) + 2*k_minus_half/h * gamma;
 \end{lstlisting}
 
-\textbf{Условия Робина:} $\alpha_0 u(a) + \alpha_1 u'(a) = \gamma_a$. 
-Выражаем $u_0$ из граничного условия: $u_0 = u_2 - \frac{2h}{\alpha_1}(\gamma_a - \alpha_0 u_1)$.
-Подстановка в разностное уравнение даёт:
-\begin{equation*}
-    \left(\frac{k_{-1/2}+k_{1/2}}{h^2} + q_1 + \frac{2k_{-1/2}\alpha_0}{h\alpha_1}\right)u_1 - \frac{k_{-1/2}+k_{1/2}}{h^2}u_2 = f_1 + \frac{2k_{-1/2}}{h\alpha_1}\gamma_a,
-\end{equation*}
-что полностью соответствует реализации:
-\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,language=Octave,frame=none]
+\subsubsection{Условие Робена: \texorpdfstring{$\alpha_0 u(a)+\alpha_1 u'(a)=\gamma_a$}{alpha0 u(a)+alpha1 u'(a)=gamma_a}}
+Аппроксимация производной:
+\[
+\alpha_0 u_1 + \alpha_1\frac{u_2-u_0}{2h} = \gamma_a \quad\Rightarrow\quad u_0 = u_2 - \frac{2h}{\alpha_1}(\gamma_a - \alpha_0 u_1).
+\]
+Подставляем в разностное уравнение для \(i=1\):
+\[
+-\frac{ k_{1/2}(u_2-u_1) - k_{-1/2}\left(u_1 - u_2 + \frac{2h}{\alpha_1}(\gamma_a - \alpha_0 u_1)\right) }{h^2} + q_1 u_1 = f_1.
+\]
+После раскрытия скобок и приведения подобных получаем:
+\begin{equation}
+\boxed{\left(\frac{k_{-1/2}+k_{1/2}}{h^2} + q_1 + \frac{2k_{-1/2}\alpha_0}{h\alpha_1}\right)u_1 - \frac{k_{-1/2}+k_{1/2}}{h^2}u_2 = f_1 + \frac{2k_{-1/2}}{h\alpha_1}\gamma_a.}
+\label{eq:robin_left}
+\end{equation}
+Реализация в коде:
+
+\begin{lstlisting}[caption={Фрагмент кода: левая граница (Робен)},label={lst:robin_left}]
+k_minus_half = k(a - h/2);
+k_plus_half  = k(a + h/2);
 b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1) + 2*k_minus_half*alpha0/(h*alpha1);
 c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
 d_vec(1)  = fv(1) + 2*k_minus_half/(h*alpha1)*gamma_a;
 \end{lstlisting}
 
+\subsubsection{Условие Дирихле: \texorpdfstring{$u(a)=A$}{u(a)=A}}
+В этом случае первое уравнение заменяется на тождество:
+\[
+u_1 = A,
+\]
+что в матрице даёт \(b_{11}=1\), \(c_{11}=0\), \(d_1=A\), а все остальные коэффициенты в первой строке обнуляются.
+
+\begin{lstlisting}[caption={Фрагмент кода: левая граница (Дирихле)},label={lst:dirichlet_left}]
+b_diag(1) = 1; c_diag(1) = 0; d_vec(1) = u_exact(a);
+\end{lstlisting}
+
 \subsection{Правая граница (\texorpdfstring{$x=b$}{x=b}, \texorpdfstring{$i=N$}{i=N})}
-Вводим мнимый узел $u_{N+1}$ в точке $x_{N+1}=b+h$. Аналогичные выкладки для $u'(b)=\delta$ и $\beta_0 u(b)+\beta_1 u'(b)=\gamma_b$ приводят к уравнению:
-\begin{equation*}
-    -\frac{k_{N-1/2}+k_{N+1/2}}{h^2}u_{N-1} + \left(\frac{k_{N-1/2}+k_{N+1/2}}{h^2} + q_N + \frac{2k_{N+1/2}\beta_0}{h\beta_1}\right)u_N = f_N + \frac{2k_{N+1/2}}{h\beta_1}\gamma_b,
-\end{equation*}
-где $k_{N-1/2}=k(b-h/2)$, $k_{N+1/2}=k(b+h/2)$. Это в точности реализуется в коде:
-\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,language=Octave,frame=none]
+Вводим фиктивный узел \(x_{N+1}=b+h\) со значением \(u_{N+1}\).
+
+\subsubsection{Условие Неймана: \texorpdfstring{$u'(b)=\delta$}{u'(b)=delta}}
+\[
+u'(b) \approx \frac{u_{N+1}-u_{N-1}}{2h} = \delta \quad\Rightarrow\quad u_{N+1} = u_{N-1} + 2h\delta.
+\]
+Разностное уравнение для \(i=N\):
+\[
+-\frac{ k_{N+1/2}(u_{N+1}-u_N) - k_{N-1/2}(u_N-u_{N-1}) }{h^2} + q_N u_N = f_N.
+\]
+Подставляем \(u_{N+1}\):
+\[
+-\frac{ k_{N+1/2}(u_{N-1}+2h\delta-u_N) - k_{N-1/2}(u_N-u_{N-1}) }{h^2} + q_N u_N = f_N.
+\]
+После упрощений:
+\begin{equation}
+\boxed{-\frac{k_{N-1/2}+k_{N+1/2}}{h^2}u_{N-1} + \left(\frac{k_{N-1/2}+k_{N+1/2}}{h^2} + q_N\right)u_N = f_N + \frac{2k_{N+1/2}}{h}\delta.}
+\label{eq:neumann_right}
+\end{equation}
+Код:
+
+\begin{lstlisting}[caption={Фрагмент кода: правая граница (Нейман)},label={lst:neumann_right}]
+k_minus_half = k(b - h/2);
+k_plus_half  = k(b + h/2);
+a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
+b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N);
+d_vec(N)    = fv(N) + 2*k_plus_half/h * delta;
+\end{lstlisting}
+
+\subsubsection{Условие Робена: \texorpdfstring{$\beta_0 u(b)+\beta_1 u'(b)=\gamma_b$}{beta0 u(b)+beta1 u'(b)=gamma_b}}
+\[
+\beta_0 u_N + \beta_1\frac{u_{N+1}-u_{N-1}}{2h} = \gamma_b \quad\Rightarrow\quad u_{N+1} = u_{N-1} + \frac{2h}{\beta_1}(\gamma_b - \beta_0 u_N).
+\]
+Подстановка в разностное уравнение для \(i=N\) даёт:
+\begin{equation}
+\boxed{-\frac{k_{N-1/2}+k_{N+1/2}}{h^2}u_{N-1} + \left(\frac{k_{N-1/2}+k_{N+1/2}}{h^2} + q_N + \frac{2k_{N+1/2}\beta_0}{h\beta_1}\right)u_N = f_N + \frac{2k_{N+1/2}}{h\beta_1}\gamma_b.}
+\label{eq:robin_right}
+\end{equation}
+Реализация:
+
+\begin{lstlisting}[caption={Фрагмент кода: правая граница (Робен)},label={lst:robin_right}]
+k_minus_half = k(b - h/2);
+k_plus_half  = k(b + h/2);
 a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
 b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N) + 2*k_plus_half*beta0/(h*beta1);
 d_vec(N)    = fv(N) + 2*k_plus_half/(h*beta1)*gamma_b;
 \end{lstlisting}
 
-\medskip
-\noindent\textit{Примечание:} для условий Дирихле первая и последняя строки матрицы заменяются на тождества $u_1=A$ и $u_N=B$, что реализовано установкой $b_{1,1}=1$, $b_{N,N}=1$ и занулением соседних коэффициентов.
+\subsubsection{Условие Дирихле: \texorpdfstring{$u(b)=B$}{u(b)=B}}
+Последняя строка матрицы заменяется на:
+\[
+u_N = B,
+\]
+т.е. \(b_{NN}=1\), \(a_{N,N-1}=0\), \(d_N = B\).
+
+\begin{lstlisting}[caption={Фрагмент кода: правая граница (Дирихле)},label={lst:dirichlet_right}]
+a_diag(N-1) = 0; b_diag(N) = 1; d_vec(N) = u_exact(b);
+\end{lstlisting}
+
+\subsection{Итоговая трёхдиагональная система и метод прогонки}
+Все полученные уравнения вместе образуют СЛАУ с трёхдиагональной матрицей:
+\[
+A_i u_{i-1} + B_i u_i + C_i u_{i+1} = D_i,\quad i=1,\dots,N,
+\]
+где коэффициенты \(A_i, B_i, C_i, D_i\) определяются по формулам выше в зависимости от типа граничных условий. Система решается методом прогонки (алгоритм Томаса), реализованным в коде:
+
+\begin{lstlisting}[caption={Метод прогонки (решение СЛАУ)},label={lst:thomas}]
+aa = a_diag(1:N-1); bb = b_diag; cc = c_diag(1:N-1); dd = d_vec;
+for i = 2:N
+    w = aa(i-1) / bb(i-1);
+    bb(i) = bb(i) - w * cc(i-1);
+    dd(i) = dd(i) - w * dd(i-1);
+end
+U(N) = dd(N) / bb(N);
+for i = N-1:-1:1
+    U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
+end
+\end{lstlisting}
+
+Таким образом, полученные разностные формулы полностью соответствуют программной реализации в Octave и обеспечивают второй порядок аппроксимации на равномерной сетке.
 \newpage
 
 \section{Реализация метода конечных разностей для задачи с граничными условиями первого рода (Дирихле)}
