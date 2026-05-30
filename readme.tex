@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[14pt,a4paper]{extarticle}  % 14pt по ГОСТ
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
@@ -9,35 +9,61 @@
 \usepackage{indentfirst}
 \setlength{\parindent}{1.25cm}
 \usepackage{hyperref}
-\hypersetup{
-    bookmarksnumbered=true,
-    bookmarksopen=true,
-    pdfencoding=auto,
-    psdextra
-}
 \usepackage{booktabs}
 \usepackage{caption}
 \usepackage{float}
 \usepackage{listings}
 \usepackage{xcolor}
-\usepackage[expansion=false]{microtype}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{hyphenat}
+\righthyphenmin=2
+\lefthyphenmin=2
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\numberwithin{equation}{section}
+\pagestyle{plain}  % Нумерация страниц внизу по центру
+\setcounter{page}{1}
+
+% ====== УСТРАНЕНИЕ ПРЕДУПРЕЖДЕНИЙ (без изменения текста/PDF) ======
+\sloppy
+\tolerance=2000
+\pretolerance=1000
 \emergencystretch=3em
+\hbadness=10000 % Скрывает Underfull/Overfull в логе
+\hfuzz=10pt     % Игнорирует незначительные вылеты строк
+% ================================================================
 
 % ====== SETUP LISTINGS ======
 \lstset{
     language=Matlab,
     extendedchars=true,
     breaklines=true,
+    breakatwhitespace=false,
+    breakautoindent=true,
+    breakindent=0pt,
+    prebreak=\space,
+    postbreak=\space,
     tabsize=4,
-    basicstyle=\ttfamily\footnotesize,
+    basicstyle=\ttfamily\scriptsize,
     keywordstyle=\color{magenta},
     commentstyle=\color{green!60!black},
     stringstyle=\color{red},
     numbers=none,
     frame=single,
     rulecolor=\color{black!25},
-    captionpos=b
+    captionpos=b,
+    columns=flexible,
+    showstringspaces=false,
+    literate={а}{{\selectfont а}}1 {б}{{\selectfont б}}1 {в}{{\selectfont в}}1 {г}{{\selectfont г}}1 {д}{{\selectfont д}}1 {е}{{\selectfont е}}1 {ё}{{\selectfont ё}}1 {ж}{{\selectfont ж}}1 {з}{{\selectfont з}}1 {и}{{\selectfont и}}1 {й}{{\selectfont й}}1 {к}{{\selectfont к}}1 {л}{{\selectfont л}}1 {м}{{\selectfont м}}1 {н}{{\selectfont н}}1 {о}{{\selectfont о}}1 {п}{{\selectfont п}}1 {р}{{\selectfont р}}1 {с}{{\selectfont с}}1 {т}{{\selectfont т}}1 {у}{{\selectfont у}}1 {ф}{{\selectfont ф}}1 {х}{{\selectfont х}}1 {ц}{{\selectfont ц}}1 {ч}{{\selectfont ч}}1 {ш}{{\selectfont ш}}1 {щ}{{\selectfont щ}}1 {ъ}{{\selectfont ъ}}1 {ы}{{\selectfont ы}}1 {ь}{{\selectfont ь}}1 {э}{{\selectfont э}}1 {ю}{{\selectfont ю}}1 {я}{{\selectfont я}}1
 }
+% ======================================
+
+\usepackage{verbatim}
+\makeatletter
+\def\verbatim@font{\scriptsize\ttfamily}
+\newcommand{\verbatimbreak}{\hspace{0pt}\penalty-100\hspace{0pt}}
+\makeatother
 
 \begin{document}
 
@@ -48,29 +74,26 @@
         \textbf{ХАНТЫ-МАНСИЙСКОГО АВТОНОМНОГО ОКРУГА -- ЮГРЫ}\\
         \textbf{«СУРГУТСКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ»}
         
+        \underline{\hspace{15cm}}\\
+
         \vspace{0.8cm}
         ПОЛИТЕХНИЧЕСКИЙ ИНСТИТУТ
         
         \vspace{0.2cm}
         Кафедра прикладной математики
         
-        \vspace{3.5cm}
+        \vspace{2.5cm}
         \textbf{КУРСОВАЯ РАБОТА}
         
         \vspace{0.3cm}
         по дисциплине «Численные методы»
         
-        \vspace{2.5cm}
-        ТЕМА КУРСОВОЙ РАБОТЫ
-        
         \vspace{0.5cm}
-        \underline{\hspace{8cm}}\\
-        \vspace{0.2cm}
         {\large \textbf{Метод конечных разностей решения линейной}} \\
         {\large \textbf{двухточечной краевой задачи для ОДУ второго порядка}}
     \end{center}
     
-    \vspace{2.5cm}
+    \vspace{1.5cm}
     \begin{flushright}
         \begin{minipage}{0.6\textwidth}
             \raggedright
@@ -81,7 +104,7 @@
             \vspace{0.8cm}
             Проверил \\
             \underline{\hspace{3cm}} \hspace{0.8cm} (оценка) \\
-            К.ф.-м.н, доцент \hspace{0.8cm} \underline{\hspace{2cm}} \hspace{0.5cm} / Назин А.Г. \\
+            К.ф.-м.н, доцент \hspace{0.8cm} \underline{\hspace{2cm}} \hspace{0.3cm} / Назин А.Г. \\
             \hfill (подпись)
         \end{minipage}
     \end{flushright}
@@ -150,336 +173,479 @@
     \begin{equation}
         \alpha_0 u(a) + \alpha_1 u'(a) = \gamma_a, \quad \beta_0 u(b) + \beta_1 u'(b) = \gamma_b,
     \end{equation}
-    где $\alpha_1 \neq 0$, $\beta_1 \neq 0$.
+    где $\alpha_0 \neq 0$, $\alpha_1 \neq 0$, $\beta_0 \neq 0$, $\beta_1 \neq 0$.
 \end{itemize}
 
 В дальнейшем для всех трёх типов граничных условий применяется одинаковый алгоритм дискретизации методом конечных разностей.
 
 \newpage
-
 \section{Условия разрешимости и единственности}
-Для краевой задачи \eqref{eq:ode_main} справедливы следующие достаточные условия корректности:
-\begin{enumerate}
-    \item $k(x), q(x), f(x) \in C[a,b]$, $k(x) > 0$ на $[a,b]$.
-    \item $q(x) \ge 0$ на $[a,b]$.
-    \item Если $q(x) > 0$ хотя бы в одной точке отрезка $[a,b]$, задача имеет единственное классическое решение при любых граничных условиях (Дирихле, Неймана или Робина).
-\end{enumerate}
 
-В вычислительных экспериментах данной работы во всех тестовых примерах $q(x) > 0$ на $[0,1]$, что гарантирует существование и единственность решения для всех трёх типов граничных условий.
+Для каждой из рассматриваемых краевых задач укажем условия, гарантирующие существование и единственность решения.
 
+\textbf{Задача Дирихле.} Согласно теореме~15.1 из~\cite{amosov_dubinsky_kopchenova_1994}, решение краевой задачи с условиями первого рода существует и единственно при выполнении условий:
+\[
+k(x) \ge k_0 > 0, \quad q(x) \ge 0, \quad k \in C^1[a,b], \quad q,f \in C[a,b],
+\]
+где $k_0 > 0$ — некоторая постоянная (нижняя граница функции $k(x)$ на $[a,b]$), которая выбирается исходя из минимального значения $k(x)$ на отрезке и гарантирует, что $k(x)$ отделена от нуля.
+В тестовом примере $k(x) = x^2 + 1 \ge 1 > 0$, $q(x) = x + 1 \ge 1 > 0$, все функции непрерывны. Условия теоремы выполнены, решение существует и единственно.
+
+\textbf{Задачи Неймана и Робина.} Для задач с граничными условиями второго и третьего рода существование и единственность решения устанавливаются с помощью \textbf{теоремы~3.2.2} из~\cite{denisov_razgulin_2009}. Теорема утверждает: если однородная краевая задача
+\[
+-\frac{d}{dx}\left(k(x)\frac{du}{dx}\right) + q(x)u = 0, \quad a < x < b,
+\]
+с однородными граничными условиями (для Неймана: $u'(a)=0$, $u'(b)=0$; для Робина: $\alpha_0 u(a)+\alpha_1 u'(a)=0$, $\beta_0 u(b)+\beta_1 u'(b)=0$) имеет только нулевое решение $u \equiv 0$, то решение исходной неоднородной задачи существует и единственно.
+
+Проверка условия теоремы (доказательство того, что данная однородная задача с однородными граничными условиями имеет только нулевое решение) относится к теории краевых задач для обыкновенных дифференциальных уравнений, которая не входит в программу курса численных методов. В настоящей работе данная проверка не приводится. В тестовых примерах $k(x) = x^2 + 1 \ge 1 > 0$, $q(x) > 0$ на $[0,1]$, а коэффициенты граничных условий положительны. Сходимость численного решения для всех трёх задач с порядком $O(h^2)$ косвенно подтверждает корректность постановки.
 \newpage
+\section{Вывод разностных формул}
 
-\section{Вывод разностных формул, реализованных в программе}
-В данном разделе показан полный вывод коэффициентов матрицы СЛАУ, получаемых при дискретизации краевой задачи методом конечных разностей. Для аппроксимации граничных условий используется метод фиктивных (мнимых) узлов \textit{(ghost nodes)}. Все выкладки приведены в соответствии с реализованным кодом Octave.
+В этом разделе подробно, шаг за шагом, показано, как из непрерывной 
+краевой задачи получаются коэффициенты матрицы СЛАУ. Для построения 
+консервативной разностной схемы используется 
+\textbf{интегро-интерполяционный метод (метод баланса)}~\cite{balans_method}.
 
-\subsection{Постановка задачи и введение сетки}
-Рассматривается линейная двухточечная краевая задача:
-\begin{equation}
-    -\bigl(k(x)\,u'(x)\bigr)' + q(x)\,u(x) = f(x), \quad a < x < b,
-    \label{eq:cont}
-\end{equation}
-с граничными условиями первого, второго или третьего рода. Функции \(k(x)>0\), \(q(x)\ge 0\), \(f(x)\) непрерывны на \([a,b]\).
+\subsection{Интегро-интерполяционный метод (метод баланса)}
 
-Вводится равномерная сетка:
+Рассматривается уравнение
 \begin{equation}
-    x_i = a + (i-1)h, \quad i=1,2,\dots,N, \qquad h = \frac{b-a}{N-1}.
-\end{equation}
-Обозначения: \(u_i = u(x_i)\), \(q_i = q(x_i)\), \(f_i = f(x_i)\). Значения \(k\) в полуцелых узлах:
-\begin{equation}
-    k_{i+1/2} = k(x_i + h/2), \qquad k_{i-1/2} = k(x_i - h/2).
+    -\bigl(k(x)u'(x)\bigr)' + q(x)u(x) = f(x), \quad a < x < b.
 \end{equation}
 
-\subsection{Внутренние узлы (\texorpdfstring{$i=2,\dots,N-1$}{i=2,...,N-1})}
-Запишем уравнение \eqref{eq:cont} в узле \(x_i\):
+Введём равномерную сетку:
 \[
--\bigl(k u'\bigr)'(x_i) + q_i u_i = f_i.
+x_i = a + (i-1)h, \quad i = 1, 2, \dots, N, \qquad h = \frac{b-a}{N-1}.
 \]
-Производную потока аппроксимируем центральной разностью:
-\[
-\bigl(k u'\bigr)'(x_i) \approx \frac{ (k u')_{i+1/2} - (k u')_{i-1/2} }{h}.
-\]
-Значения \(u'\) в полуцелых узлах заменяем разностями вперёд/назад:
-\[
-u'_{i+1/2} \approx \frac{u_{i+1}-u_i}{h}, \qquad
-u'_{i-1/2} \approx \frac{u_i-u_{i-1}}{h}.
-\]
-Тогда:
-\[
-(k u')_{i+1/2} \approx k_{i+1/2}\frac{u_{i+1}-u_i}{h}, \qquad
-(k u')_{i-1/2} \approx k_{i-1/2}\frac{u_i-u_{i-1}}{h}.
-\]
-Подставляем в разностное уравнение:
-\[
--\frac{ k_{i+1/2}\dfrac{u_{i+1}-u_i}{h} - k_{i-1/2}\dfrac{u_i-u_{i-1}}{h} }{h} + q_i u_i = f_i.
-\]
-После приведения к общему знаменателю:
-\[
--\frac{ k_{i+1/2}(u_{i+1}-u_i) - k_{i-1/2}(u_i-u_{i-1}) }{h^2} + q_i u_i = f_i.
-\]
-Раскрываем скобки и группируем коэффициенты:
-\begin{align}
-&-\frac{k_{i+1/2}u_{i+1} - k_{i+1/2}u_i - k_{i-1/2}u_i + k_{i-1/2}u_{i-1}}{h^2} + q_i u_i = f_i,\nonumber\\
-&-\frac{k_{i-1/2}}{h^2}u_{i-1} + \left(\frac{k_{i-1/2}+k_{i+1/2}}{h^2} + q_i\right)u_i - \frac{k_{i+1/2}}{h^2}u_{i+1} = f_i.
-\label{eq:int}
-\end{align}
-Формула \eqref{eq:int} — основное разностное уравнение для внутренних узлов. В программной реализации оно выглядит следующим образом (цикл по \(i=2,\dots,N-1\)):
+Обозначим: $u_i = u(x_i)$, $q_i = q(x_i)$, $f_i = f(x_i)$.
 
-\begin{lstlisting}[caption={Фрагмент кода: внутренние узлы},label={lst:inner}]
-for i = 2:N-1
-    a_diag(i-1) = -kmid(i-1)/h^2;          % k_{i-1/2}
-    c_diag(i)   = -kmid(i)/h^2;            % k_{i+1/2}
-    b_diag(i)   = (kmid(i-1)+kmid(i))/h^2 + qv(i);
-    d_vec(i)    = fv(i);
-end
-\end{lstlisting}
-
-\subsection{Левая граница (\texorpdfstring{$x=a$}{x=a}, \texorpdfstring{$i=1$}{i=1})}
-Вводим фиктивный узел \(x_0 = a-h\) со значением \(u_0\). Уравнение для \(i=1\) формально совпадает с \eqref{eq:int}, но содержит \(u_0\), которое выражается через граничное условие.
-
-\subsubsection{Условие Неймана: \texorpdfstring{$u'(a)=\gamma$}{u'(a)=gamma}}
-Центральная разность для производной:
-\[
-u'(a) \approx \frac{u_2-u_0}{2h} = \gamma \quad\Rightarrow\quad u_0 = u_2 - 2h\gamma.
-\]
-Подставляем в уравнение для \(i=1\):
-\[
--\frac{ k_{1/2}(u_2-u_1) - k_{-1/2}\bigl(u_1 - (u_2-2h\gamma)\bigr) }{h^2} + q_1 u_1 = f_1.
-\]
-Упрощаем числитель:
-\[
-k_{1/2}(u_2-u_1) - k_{-1/2}(u_1-u_2+2h\gamma) = (k_{1/2}+k_{-1/2})u_2 - (k_{1/2}+k_{-1/2})u_1 - 2h k_{-1/2}\gamma.
-\]
-После подстановки и переноса слагаемого с \(\gamma\) в правую часть:
-\[
-\frac{k_{-1/2}+k_{1/2}}{h^2}u_1 - \frac{k_{-1/2}+k_{1/2}}{h^2}u_2 + q_1 u_1 = f_1 + \frac{2k_{-1/2}}{h}\gamma.
-\]
-Окончательно:
+Введём поток \(W(x) = -k(x)u'(x)\). Тогда уравнение переписывается как
 \begin{equation}
-\boxed{\left(\frac{k_{-1/2}+k_{1/2}}{h^2} + q_1\right)u_1 - \frac{k_{-1/2}+k_{1/2}}{h^2}u_2 = f_1 + \frac{2k_{-1/2}}{h}\gamma.}
-\label{eq:neumann_left}
+    -W' - q u = -f \quad\Rightarrow\quad W' + q u = f.
 \end{equation}
-В коде это реализовано так:
 
-\begin{lstlisting}[caption={Фрагмент кода: левая граница (Нейман)},label={lst:neumann_left}]
-k_minus_half = k(a - h/2);
-k_plus_half  = k(a + h/2);
-b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1);
-c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
-d_vec(1)  = fv(1) + 2*k_minus_half/h * gamma;
-\end{lstlisting}
-
-\subsubsection{Условие Робена: \texorpdfstring{$\alpha_0 u(a)+\alpha_1 u'(a)=\gamma_a$}{alpha0 u(a)+alpha1 u'(a)=gamma_a}}
-Аппроксимация производной:
-\[
-\alpha_0 u_1 + \alpha_1\frac{u_2-u_0}{2h} = \gamma_a \quad\Rightarrow\quad u_0 = u_2 - \frac{2h}{\alpha_1}(\gamma_a - \alpha_0 u_1).
-\]
-Подставляем в разностное уравнение для \(i=1\):
-\[
--\frac{ k_{1/2}(u_2-u_1) - k_{-1/2}\left(u_1 - u_2 + \frac{2h}{\alpha_1}(\gamma_a - \alpha_0 u_1)\right) }{h^2} + q_1 u_1 = f_1.
-\]
-После раскрытия скобок и приведения подобных получаем:
+Проинтегрируем последнее на отрезке \([x_{i-1/2}, x_{i+1/2}]\), где 
+\(x_{i\pm1/2} = x_i \pm h/2\):
 \begin{equation}
-\boxed{\left(\frac{k_{-1/2}+k_{1/2}}{h^2} + q_1 + \frac{2k_{-1/2}\alpha_0}{h\alpha_1}\right)u_1 - \frac{k_{-1/2}+k_{1/2}}{h^2}u_2 = f_1 + \frac{2k_{-1/2}}{h\alpha_1}\gamma_a.}
-\label{eq:robin_left}
+    \int_{x_{i-1/2}}^{x_{i+1/2}} W' dx + \int_{x_{i-1/2}}^{x_{i+1/2}} q u \, dx = \int_{x_{i-1/2}}^{x_{i+1/2}} f \, dx.
 \end{equation}
-Реализация в коде:
 
-\begin{lstlisting}[caption={Фрагмент кода: левая граница (Робен)},label={lst:robin_left}]
-k_minus_half = k(a - h/2);
-k_plus_half  = k(a + h/2);
-b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1) + 2*k_minus_half*alpha0/(h*alpha1);
-c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
-d_vec(1)  = fv(1) + 2*k_minus_half/(h*alpha1)*gamma_a;
-\end{lstlisting}
-
-\subsubsection{Условие Дирихле: \texorpdfstring{$u(a)=A$}{u(a)=A}}
-В этом случае первое уравнение заменяется на тождество:
-\[
-u_1 = A,
-\]
-что в матрице даёт \(b_{11}=1\), \(c_{11}=0\), \(d_1=A\), а все остальные коэффициенты в первой строке обнуляются.
-
-\begin{lstlisting}[caption={Фрагмент кода: левая граница (Дирихле)},label={lst:dirichlet_left}]
-b_diag(1) = 1; c_diag(1) = 0; d_vec(1) = u_exact(a);
-\end{lstlisting}
-
-\subsection{Правая граница (\texorpdfstring{$x=b$}{x=b}, \texorpdfstring{$i=N$}{i=N})}
-Вводим фиктивный узел \(x_{N+1}=b+h\) со значением \(u_{N+1}\).
-
-\subsubsection{Условие Неймана: \texorpdfstring{$u'(b)=\delta$}{u'(b)=delta}}
-\[
-u'(b) \approx \frac{u_{N+1}-u_{N-1}}{2h} = \delta \quad\Rightarrow\quad u_{N+1} = u_{N-1} + 2h\delta.
-\]
-Разностное уравнение для \(i=N\):
-\[
--\frac{ k_{N+1/2}(u_{N+1}-u_N) - k_{N-1/2}(u_N-u_{N-1}) }{h^2} + q_N u_N = f_N.
-\]
-Подставляем \(u_{N+1}\):
-\[
--\frac{ k_{N+1/2}(u_{N-1}+2h\delta-u_N) - k_{N-1/2}(u_N-u_{N-1}) }{h^2} + q_N u_N = f_N.
-\]
-После упрощений:
+Первый интеграл вычисляется точно:
 \begin{equation}
-\boxed{-\frac{k_{N-1/2}+k_{N+1/2}}{h^2}u_{N-1} + \left(\frac{k_{N-1/2}+k_{N+1/2}}{h^2} + q_N\right)u_N = f_N + \frac{2k_{N+1/2}}{h}\delta.}
-\label{eq:neumann_right}
+    W(x_{i+1/2}) - W(x_{i-1/2}) + \int_{x_{i-1/2}}^{x_{i+1/2}} (q u - f) dx = 0.
 \end{equation}
-Код:
 
-\begin{lstlisting}[caption={Фрагмент кода: правая граница (Нейман)},label={lst:neumann_right}]
-k_minus_half = k(b - h/2);
-k_plus_half  = k(b + h/2);
-a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
-b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N);
-d_vec(N)    = fv(N) + 2*k_plus_half/h * delta;
-\end{lstlisting}
+Это уравнение баланса на элементарной ячейке.
 
-\subsubsection{Условие Робена: \texorpdfstring{$\beta_0 u(b)+\beta_1 u'(b)=\gamma_b$}{beta0 u(b)+beta1 u'(b)=gamma_b}}
-\[
-\beta_0 u_N + \beta_1\frac{u_{N+1}-u_{N-1}}{2h} = \gamma_b \quad\Rightarrow\quad u_{N+1} = u_{N-1} + \frac{2h}{\beta_1}(\gamma_b - \beta_0 u_N).
-\]
-Подстановка в разностное уравнение для \(i=N\) даёт:
+\subsection{Аппроксимация интегралов и потоков}
+
+Заменим интегралы по формуле прямоугольников, полагая подынтегральные функции 
+постоянными на интервале интегрирования:
 \begin{equation}
-\boxed{-\frac{k_{N-1/2}+k_{N+1/2}}{h^2}u_{N-1} + \left(\frac{k_{N-1/2}+k_{N+1/2}}{h^2} + q_N + \frac{2k_{N+1/2}\beta_0}{h\beta_1}\right)u_N = f_N + \frac{2k_{N+1/2}}{h\beta_1}\gamma_b.}
-\label{eq:robin_right}
+    \int_{x_{i-1/2}}^{x_{i+1/2}} q u \, dx \approx q_i u_i h, \qquad
+    \int_{x_{i-1/2}}^{x_{i+1/2}} f \, dx \approx f_i h.
 \end{equation}
-Реализация:
 
-\begin{lstlisting}[caption={Фрагмент кода: правая граница (Робен)},label={lst:robin_right}]
-k_minus_half = k(b - h/2);
-k_plus_half  = k(b + h/2);
-a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
-b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N) + 2*k_plus_half*beta0/(h*beta1);
-d_vec(N)    = fv(N) + 2*k_plus_half/(h*beta1)*gamma_b;
-\end{lstlisting}
+Для аппроксимации потоков \(W_{i-1/2} = W(x_{i-1/2})\) и \(W_{i+1/2} = W(x_{i+1/2})\) 
+используем определение \(W = -k u'\). Проинтегрируем равенство \(u' = -W/k\) 
+на отрезке \([x_{i-1}, x_i]\):
+\begin{equation}
+    u_{i-1} - u_i = \int_{x_{i-1}}^{x_i} \frac{W}{k} dx.
+\end{equation}
 
-\subsubsection{Условие Дирихле: \texorpdfstring{$u(b)=B$}{u(b)=B}}
-Последняя строка матрицы заменяется на:
+Считая поток \(W = W_{i-1/2}\) постоянным на этом интервале, получаем:
+\begin{equation}
+    u_{i-1} - u_i \approx W_{i-1/2} \int_{x_{i-1}}^{x_i} \frac{dx}{k(x)}.
+\end{equation}
+
+Отсюда выражаем поток:
+\begin{equation}
+    W_{i-1/2} \approx -a_i \frac{u_i - u_{i-1}}{h}, \qquad
+    a_i = \left( \frac{1}{h} \int_{x_{i-1}}^{x_i} \frac{dx}{k(x)} \right)^{-1}.
+\end{equation}
+
+Аналогично для правой границы ячейки:
+\begin{equation}
+    W_{i+1/2} \approx -a_{i+1} \frac{u_{i+1} - u_i}{h}, \qquad
+    a_{i+1} = \left( \frac{1}{h} \int_{x_i}^{x_{i+1}} \frac{dx}{k(x)} \right)^{-1}.
+\end{equation}
+
+Подставляя последние формулы в уравнение баланса, получаем:
+\begin{equation}
+    -a_{i+1} \frac{u_{i+1} - u_i}{h} + a_i \frac{u_i - u_{i-1}}{h} + (q_i u_i - f_i) h = 0.
+\end{equation}
+
+Разделим на \(h\):
+\begin{equation}
+    \frac{1}{h}\left( -a_{i+1} \frac{u_{i+1} - u_i}{h} + a_i \frac{u_i - u_{i-1}}{h} \right) + q_i u_i = f_i, \quad i = 2, \dots, N-1.
+\end{equation}
+
+Если коэффициенты \(k(x)\) являются гладкими функциями, то с точностью до \(O(h^2)\) 
+можно положить:
 \[
-u_N = B,
+a_i = k(x_i - h/2) \equiv k_{i-1/2}, \qquad a_{i+1} = k(x_i + h/2) \equiv k_{i+1/2}.
 \]
-т.е. \(b_{NN}=1\), \(a_{N,N-1}=0\), \(d_N = B\).
 
-\begin{lstlisting}[caption={Фрагмент кода: правая граница (Дирихле)},label={lst:dirichlet_right}]
-a_diag(N-1) = 0; b_diag(N) = 1; d_vec(N) = u_exact(b);
-\end{lstlisting}
-
-\subsection{Итоговая трёхдиагональная система и метод прогонки}
-Все полученные уравнения вместе образуют СЛАУ с трёхдиагональной матрицей:
+Подставим эти выражения в уравнение:
 \[
-A_i u_{i-1} + B_i u_i + C_i u_{i+1} = D_i,\quad i=1,\dots,N,
+\frac{1}{h}\left( -k_{i+1/2} \frac{u_{i+1} - u_i}{h} + k_{i-1/2} \frac{u_i - u_{i-1}}{h} \right) + q_i u_i = f_i.
 \]
-где коэффициенты \(A_i, B_i, C_i, D_i\) определяются по формулам выше в зависимости от типа граничных условий. Система решается методом прогонки (алгоритм Томаса), реализованным в коде:
 
-\begin{lstlisting}[caption={Метод прогонки (решение СЛАУ)},label={lst:thomas}]
-aa = a_diag(1:N-1); bb = b_diag; cc = c_diag(1:N-1); dd = d_vec;
-for i = 2:N
-    w = aa(i-1) / bb(i-1);
-    bb(i) = bb(i) - w * cc(i-1);
-    dd(i) = dd(i) - w * dd(i-1);
-end
-U(N) = dd(N) / bb(N);
-for i = N-1:-1:1
-    U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
-end
-\end{lstlisting}
+Раскроем скобки:
+\[
+\frac{-k_{i+1/2}(u_{i+1} - u_i) + k_{i-1/2}(u_i - u_{i-1})}{h^2} + q_i u_i = f_i.
+\]
 
-Таким образом, полученные разностные формулы полностью соответствуют программной реализации в Octave и обеспечивают второй порядок аппроксимации на равномерной сетке.
-\newpage
+Раскроем скобки в числителе:
+\[
+\frac{-k_{i+1/2}u_{i+1} + k_{i+1/2}u_i + k_{i-1/2}u_i - k_{i-1/2}u_{i-1}}{h^2} + q_i u_i = f_i.
+\]
 
-\section{Реализация метода конечных разностей для задачи с граничными условиями первого рода (Дирихле)}
+Сгруппируем слагаемые при \(u_{i-1}\), \(u_i\) и \(u_{i+1}\):
+\begin{equation}
+    -\frac{k_{i-1/2}}{h^2} u_{i-1} + 
+    \left( \frac{k_{i-1/2} + k_{i+1/2}}{h^2} + q_i \right) u_i - 
+    \frac{k_{i+1/2}}{h^2} u_{i+1} = f_i.
+    \label{eq:internal_node}
+\end{equation}
 
-\subsection{Программная реализация на Octave}
+Это основное разностное уравнение для внутренних узлов.
 
-Ниже приведён код решения задачи Дирихле с автоматическим сгущением сетки до достижения точности $\varepsilon = 10^{-4}$.
+В программе оно реализовано следующим циклом:
 
-\begin{lstlisting}[caption={Code No.1},label={lst:dirichlet}]
-graphics_toolkit("gnuplot");
-
-a = 0; b = 1;
-k = @(x) x.^2 + 1;
-q = @(x) x + 1;
-f = @(x) x.^5 - 21*x.^4 + 23*x.^3 - 14*x.^2 + 9*x - 2;
-
-u_exact = @(x) x.^4 - 2*x.^3 + x.^2 + 3*x;
-
-tol = 1e-4;
-N = 5;
-err_est = tol + 1;
-first = true;
-
-while err_est > tol
-    h = (b - a)/(N - 1);
-    x = linspace(a, b, N)';
-    xmid = (x(1:end-1) + x(2:end))/2;
-
-    kmid = k(xmid);
-    qv = q(x);
-    fv = f(x);
-
-    a_diag = zeros(N,1);
-    b_diag = zeros(N,1);
-    c_diag = zeros(N,1);
-    d_vec = zeros(N,1);
-
+\begin{verbatim}
     for i = 2:N-1
         a_diag(i-1) = -kmid(i-1)/h^2;
         c_diag(i)   = -kmid(i)/h^2;
-        b_diag(i)   = (kmid(i-1) + kmid(i))/h^2 + qv(i);
+        b_diag(i)   = (kmid(i-1)+kmid(i))/h^2 + qv(i);
         d_vec(i)    = fv(i);
     end
+\end{verbatim}
 
-    b_diag(1) = 1; c_diag(1) = 0; d_vec(1) = u_exact(0);
-    a_diag(N-1) = 0; b_diag(N) = 1; d_vec(N) = u_exact(1);
+\subsection{Аппроксимация граничных условий методом фиктивных узлов}
 
-    n = length(d_vec);
-    aa = a_diag(1:n-1);
-    bb = b_diag;
-    cc = c_diag(1:n-1);
-    dd = d_vec;
+Для сохранения второго порядка аппроксимации при учёте
+граничных условий второго и третьего рода используется
+метод фиктивных узлов (законтурных точек), подробно
+описанный в \cite{marchuk_methods}.
+Сеточная область продолжается за пределы отрезка $[a,b]$:
+вводятся дополнительные точки
+\[
+x_0 = a - h, \qquad x_{N+1} = b + h,
+\]
+со значениями искомой функции $u_0 = u(x_0)$ и $u_{N+1} = u(x_{N+1})$.
+Производные на границах аппроксимируются центральными
+разностями, что обеспечивает второй порядок точности:
+\begin{equation}
+    u'(a) \approx \frac{u_2 - u_0}{2h}, \qquad
+    u'(b) \approx \frac{u_{N+1} - u_{N-1}}{2h}.
+    \label{eq:neumann_approx}
+\end{equation}
+Далее фиктивные значения $u_0$ и $u_{N+1}$ исключаются
+путём выражения их из соответствующих граничных условий
+и подстановки в разностные уравнения для крайних узлов
+$i=1$ и $i=N$.
 
-    for i = 2:n
-        w = aa(i-1) / bb(i-1);
-        bb(i) = bb(i) - w * cc(i-1);
-        dd(i) = dd(i) - w * dd(i-1);
-    end
+\subsubsection{Левая граница: условие Неймана}
 
-    U = zeros(n,1);
-    U(n) = dd(n) / bb(n);
-    for i = n-1:-1:1
-        U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
-    end
+Пусть задано \(u'(a) = \gamma\). Из формулы \eqref{eq:neumann_approx} 
+для производной выразим \(u_0\):
+\[
+\frac{u_2 - u_0}{2h} = \gamma \quad\Rightarrow\quad u_0 = u_2 - 2h\gamma.
+\]
 
-    if ~first
-        U_coarse = U(1:2:end);
-        err_est = max(abs(U_coarse - U_prev)) / 3;
-        fprintf('N = %d, h = %.6f, err_est = %.6e\n', N, h, err_est);
-        if err_est < tol
-            x_final = x;
-            U_final = U;
-            break;
-        end
-    else
-        first = false;
-    end
+Запишем уравнение \eqref{eq:internal_node} для левого граничного узла \(i=1\). 
+При этом \(k_{i-1/2} = k(a - h/2) \equiv k_{-1/2}\), 
+\(k_{i+1/2} = k(a + h/2) \equiv k_{1/2}\):
+\[
+-\frac{k_{-1/2}}{h^2}u_0 + 
+\left( \frac{k_{-1/2}+k_{1/2}}{h^2} + q_1 \right)u_1 - 
+\frac{k_{1/2}}{h^2}u_2 = f_1.
+\]
 
-    U_prev = U;
-    N = 2*N - 1;
+Подставляем выражение для \(u_0\):
+\[
+-\frac{k_{-1/2}}{h^2}(u_2 - 2h\gamma) + 
+\left( \frac{k_{-1/2}+k_{1/2}}{h^2} + q_1 \right)u_1 - 
+\frac{k_{1/2}}{h^2}u_2 = f_1.
+\]
+
+Раскрываем скобки и группируем слагаемые:
+\[
+-\frac{k_{-1/2}+k_{1/2}}{h^2}u_2 + 
+\left( \frac{k_{-1/2}+k_{1/2}}{h^2} + q_1 \right)u_1 + 
+\frac{2k_{-1/2}}{h}\gamma = f_1.
+\]
+
+Переносим известное слагаемое с \(\gamma\) в правую часть:
+\begin{equation}
+    \left( \frac{k_{-1/2}+k_{1/2}}{h^2} + q_1 \right)u_1 - 
+    \frac{k_{-1/2}+k_{1/2}}{h^2}u_2 = f_1 - \frac{2k_{-1/2}}{h}\gamma.
+    \label{eq:left_neumann_final}
+\end{equation}
+
+В программе это соответствует:
+
+\begin{verbatim}
+    k_minus_half = k(a - h/2);
+    k_plus_half  = k(a + h/2);
+    b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1);
+    c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
+    d_vec(1)  = fv(1) - 2*k_minus_half/h * gamma;
+\end{verbatim}
+
+\subsubsection{Левая граница: условие Робина}
+
+Пусть задано \(\alpha_0 u(a) + \alpha_1 u'(a) = \gamma_a\). 
+Подставляем аппроксимацию производной:
+\[
+\alpha_0 u_1 + \alpha_1 \cdot \frac{u_2 - u_0}{2h} = \gamma_a.
+\]
+
+Выражаем \(u_0\):
+\[
+\alpha_1 \cdot \frac{u_2 - u_0}{2h} = \gamma_a - \alpha_0 u_1
+\quad\Rightarrow\quad
+u_2 - u_0 = \frac{2h}{\alpha_1}(\gamma_a - \alpha_0 u_1)
+\quad\Rightarrow\quad
+u_0 = u_2 - \frac{2h}{\alpha_1}(\gamma_a - \alpha_0 u_1).
+\]
+
+Подставляем в уравнение для \(i=1\):
+\[
+-\frac{k_{-1/2}}{h^2}\left[ u_2 - \frac{2h}{\alpha_1}(\gamma_a - \alpha_0 u_1) \right] + 
+\left( \frac{k_{-1/2}+k_{1/2}}{h^2} + q_1 \right)u_1 - 
+\frac{k_{1/2}}{h^2}u_2 = f_1.
+\]
+
+Раскрываем скобки и приводим подобные:
+\[
+-\frac{k_{-1/2}}{h^2}u_2 + \frac{2k_{-1/2}}{h\alpha_1}\gamma_a - 
+\frac{2k_{-1/2}\alpha_0}{h\alpha_1}u_1 + 
+\left( \frac{k_{-1/2}+k_{1/2}}{h^2} + q_1 \right)u_1 - 
+\frac{k_{1/2}}{h^2}u_2 = f_1.
+\]
+
+Объединяем слагаемые при \(u_1\) и \(u_2\):
+\[
+-\frac{k_{-1/2}+k_{1/2}}{h^2}u_2 + 
+\left( \frac{k_{-1/2}+k_{1/2}}{h^2} + q_1 - \frac{2k_{-1/2}\alpha_0}{h\alpha_1} \right)u_1 + 
+\frac{2k_{-1/2}}{h\alpha_1}\gamma_a = f_1.
+\]
+
+Переносим известное слагаемое в правую часть:
+\begin{equation}
+    \left( \frac{k_{-1/2}+k_{1/2}}{h^2} + q_1 - \frac{2k_{-1/2}\alpha_0}{h\alpha_1} \right)u_1 - 
+    \frac{k_{-1/2}+k_{1/2}}{h^2}u_2 = f_1 - \frac{2k_{-1/2}}{h\alpha_1}\gamma_a.
+    \label{eq:left_robin_final}
+\end{equation}
+
+В программе это соответствует:
+
+\begin{verbatim}
+    k_minus_half = k(a - h/2);
+    k_plus_half  = k(a + h/2);
+    b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1) - 2*k_minus_half*alpha0/(h*alpha1);
+    c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
+    d_vec(1)  = fv(1) - 2*k_minus_half/(h*alpha1)*gamma_a;
+\end{verbatim}
+
+\subsubsection{Правая граница: условие Неймана}
+
+Для правой границы \(i=N\) с условием \(u'(b) = \delta\) выражаем \(u_{N+1}\):
+\[
+\frac{u_{N+1} - u_{N-1}}{2h} = \delta \quad\Rightarrow\quad u_{N+1} = u_{N-1} + 2h\delta.
+\]
+
+Записываем уравнение \eqref{eq:internal_node} для \(i=N\), где 
+\(k_{N-1/2} = k(b - h/2)\), \(k_{N+1/2} = k(b + h/2)\):
+\[
+-\frac{k_{N-1/2}}{h^2}u_{N-1} + 
+\left( \frac{k_{N-1/2}+k_{N+1/2}}{h^2} + q_N \right)u_N - 
+\frac{k_{N+1/2}}{h^2}u_{N+1} = f_N.
+\]
+
+Подставляем выражение для \(u_{N+1}\):
+\[
+-\frac{k_{N-1/2}}{h^2}u_{N-1} + 
+\left( \frac{k_{N-1/2}+k_{N+1/2}}{h^2} + q_N \right)u_N - 
+\frac{k_{N+1/2}}{h^2}(u_{N-1} + 2h\delta) = f_N.
+\]
+
+Раскрываем скобки и группируем:
+\[
+-\frac{k_{N-1/2}+k_{N+1/2}}{h^2}u_{N-1} + 
+\left( \frac{k_{N-1/2}+k_{N+1/2}}{h^2} + q_N \right)u_N - 
+\frac{2k_{N+1/2}}{h}\delta = f_N.
+\]
+
+Переносим известное слагаемое в правую часть:
+\begin{equation}
+    -\frac{k_{N-1/2}+k_{N+1/2}}{h^2}u_{N-1} + 
+    \left( \frac{k_{N-1/2}+k_{N+1/2}}{h^2} + q_N \right)u_N = 
+    f_N + \frac{2k_{N+1/2}}{h}\delta.
+    \label{eq:right_neumann_final}
+\end{equation}
+
+В программе это соответствует:
+
+\begin{verbatim}
+    k_minus_half = k(b - h/2);
+    k_plus_half  = k(b + h/2);
+    a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
+    b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N);
+    d_vec(N)    = fv(N) + 2*k_plus_half/h * delta;
+\end{verbatim}
+
+\subsubsection{Правая граница: условие Робина}
+
+Для условия \(\beta_0 u(b) + \beta_1 u'(b) = \gamma_b\) выражаем \(u_{N+1}\):
+\[
+\beta_0 u_N + \beta_1 \cdot \frac{u_{N+1} - u_{N-1}}{2h} = \gamma_b
+\quad\Rightarrow\quad
+u_{N+1} = u_{N-1} + \frac{2h}{\beta_1}(\gamma_b - \beta_0 u_N).
+\]
+
+Подставляем в уравнение для \(i=N\) и выполняем преобразования, аналогичные случаю левой границы:
+\begin{equation}
+    -\frac{k_{N-1/2}+k_{N+1/2}}{h^2}u_{N-1} + 
+    \left( \frac{k_{N-1/2}+k_{N+1/2}}{h^2} + q_N + \frac{2k_{N+1/2}\beta_0}{h\beta_1} \right)u_N = 
+    f_N + \frac{2k_{N+1/2}}{h\beta_1}\gamma_b.
+    \label{eq:right_robin_final}
+\end{equation}
+
+В программе это соответствует:
+
+\begin{verbatim}
+    k_minus_half = k(b - h/2);
+    k_plus_half  = k(b + h/2);
+    a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
+    b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N) + 2*k_plus_half*beta0/(h*beta1);
+    d_vec(N)    = fv(N) + 2*k_plus_half/(h*beta1)*gamma_b;
+\end{verbatim}
+
+\subsection{Условия Дирихле}
+
+Для условий первого рода граничные значения известны: \(u_1 = A\), \(u_N = B\). 
+Поэтому первое и последнее уравнения системы заменяются на тождества:
+\[
+u_1 = A, \qquad u_N = B.
+\]
+
+В программе это реализовано так:
+
+\begin{verbatim}
+    b_diag(1) = 1; c_diag(1) = 0; d_vec(1) = A;
+    a_diag(N-1) = 0; b_diag(N) = 1; d_vec(N) = B;
+\end{verbatim}
+
+\subsection{Итоговая система}
+
+После описанных преобразований получается система линейных алгебраических 
+уравнений с трёхдиагональной матрицей, которая эффективно решается 
+методом прогонки.
+
+\newpage
+\section{Метод прогонки решения трёхдиагональной СЛАУ}
+
+Алгоритм решения системы с трёхдиагональной матрицей, определяемый 
+формулами прямого и обратного хода, называется методом прогонки 
+и подробно изложен в~\cite{samarskii_gulin_1989}.
+
+В результате дискретизации получена система линейных алгебраических уравнений 
+с трёхдиагональной матрицей:
+\[
+\begin{cases}
+b_1 u_1 + c_1 u_2 = d_1, \\
+a_2 u_1 + b_2 u_2 + c_2 u_3 = d_2, \\
+\cdots \\
+a_{i} u_{i-1} + b_i u_i + c_i u_{i+1} = d_i, \quad i = 2, 3, \dots, N-1, \\
+\cdots \\
+a_{N} u_{N-1} + b_N u_N = d_N,
+\end{cases}
+\]
+где \(a_i\), \(b_i\), \(c_i\) — коэффициенты, \(d_i\) — правая часть.
+
+Для решения такой системы используется \textbf{метод прогонки} — 
+частный случай метода Гаусса, учитывающий трёхдиагональную структуру 
+матрицы и имеющий вычислительную сложность \(O(N)\).
+
+\subsection{Алгоритм метода прогонки}
+
+Прямой ход прогонки (вычисление прогоночных коэффициентов \(\alpha_i\) и \(\beta_i\)):
+\[
+\alpha_1 = \frac{c_1}{b_1}, \quad \beta_1 = \frac{d_1}{b_1},
+\]
+\[
+\alpha_i = \frac{c_i}{b_i - a_i \alpha_{i-1}}, \quad
+\beta_i = \frac{d_i - a_i \beta_{i-1}}{b_i - a_i \alpha_{i-1}}, \quad i = 2, 3, \dots, N-1.
+\]
+
+Обратный ход (восстановление решения):
+\[
+u_N = \frac{d_N - a_N \beta_{N-1}}{b_N - a_N \alpha_{N-1}},
+\]
+\[
+u_i = \beta_i - \alpha_i u_{i+1}, \quad i = N-1, N-2, \dots, 1.
+\]
+
+Условия корректности метода (достаточное условие устойчивости):
+\[
+|b_i| \ge |a_i| + |c_i|, \quad i = 1, \dots, N,
+\]
+причём хотя бы для одного \(i\) неравенство строгое. 
+Для рассматриваемой краевой задачи эти условия выполняются, 
+так как \(k_{i\pm1/2} > 0\) и \(q_i \ge 0\).
+
+\subsection{Программная реализация в Octave}
+
+Ниже приведён фрагмент кода, реализующий метод прогонки для 
+трёхдиагональной системы.
+
+\begin{verbatim}
+n = length(d_vec);
+aa = a_diag(1:n-1);
+bb = b_diag;
+cc = c_diag(1:n-1);
+dd = d_vec;
+
+alpha = zeros(n, 1);
+beta  = zeros(n, 1);
+
+alpha(1) = cc(1) / bb(1);
+beta(1)  = dd(1) / bb(1);
+
+for i = 2:n-1
+    denominator = bb(i) - aa(i-1) * alpha(i-1);
+    alpha(i) = cc(i) / denominator;
+    beta(i)  = (dd(i) - aa(i-1) * beta(i-1)) / denominator;
 end
 
-fprintf('Runge error estimate: %.6e\n', err_est);
+U = zeros(n, 1);
+U(n) = (dd(n) - aa(n-1) * beta(n-1)) / (bb(n) - aa(n-1) * alpha(n-1));
 
-figure;
-plot(x_final, U_final, 'ro-', 'MarkerSize', 8, 'LineWidth', 1.5);
-xlabel('x'); ylabel('u(x)');
-legend('Numerical solution', 'Location', 'northwest');
-grid on;
+for i = n-1:-1:1
+    U(i) = beta(i) - alpha(i) * U(i+1);
+end
+\end{verbatim}
 
-figure;
-plot(x_final(2:end-1), abs(U_final(2:end-1) - U_prev(2:2:end-1)), 'k-o');
-xlabel('x'); ylabel('Error estimate (Runge)');
-grid on;
-\end{lstlisting}
+\newpage
+\section{Реализация метода конечных разностей для задачи с граничными условиями первого рода (Дирихле)}
 
+Рассматривается краевая задача:
+\begin{equation*}
+    -\frac{d}{dx}\left((x^2+1)\frac{du}{dx}\right) + (x+1)u = x^5 - 21x^4 + 23x^3 - 14x^2 + 9x - 2, \quad 0 < x < 1,
+\end{equation*}
+с граничными условиями Дирихле:
+\begin{equation*}
+    u(0) = u_{\text{exact}}(0) = 3, \qquad u(1) = u_{\text{exact}}(1) = 3.
+\end{equation*}
+Точное решение задачи:
+\begin{equation*}
+    u_{\text{exact}}(x) = x^4 - 2x^3 + x^2 + 3x.
+\end{equation*}
+Параметры задачи: $k(x)=x^2+1$, $q(x)=x+1$, $f(x)=x^5-21x^4+23x^3-14x^2+9x-2$.
+
+Программная реализация метода для задачи Дирихле приведена в Приложении 1. Ниже представлены результаты вычислительного эксперимента.
 \subsection{Результаты сгущения сетки}
 
 В процессе решения сетка автоматически сгущалась. Результаты приведены в таблице~\ref{tab:convergence}.
@@ -505,10 +671,9 @@ grid on;
     \text{err}_{\text{est}} = \frac{\max|U_{\text{coarse}} - U_{\text{prev}}|}{2^p - 1} = \frac{\max|U_{\text{coarse}} - U_{\text{prev}}|}{3}, \quad p=2.
 \end{equation*}
 
-\newpage
-\subsection{График численного решения}
+\subsection{График численного и точного решений}
 
-На рисунке~\ref{fig:solution} представлено численное решение.
+На рисунке~\ref{fig:solution} представлено численное и точное решения.
 
 \begin{figure}[H]
     \centering
@@ -528,137 +693,104 @@ grid on;
     \label{fig:error}
 \end{figure}
 
+\subsection*{Эксперимент 1. Разрывной коэффициент $k(x)$}
+
+Была решена задача Дирихле, но с другим коэффициентом
+\begin{equation*}
+k(x) = 
+\begin{cases}
+1, & 0 \le x \le 0.5, \\
+101, & 0.5 < x \le 1.
+\end{cases}
+\end{equation*}
+
+то есть со скачком в 100 раз в середине отрезка (остальные параметры не менялись). Результаты представлены на рисунках \ref{fig:solution_jump} и \ref{fig:error_jump}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{solution_jump.png}
+    \caption{Численное решение с разрывным коэффициентом}
+    \label{fig:solution_jump}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{error_jump.png}
+    \caption{Оценка погрешности для задачи с разрывным коэффициентом}
+    \label{fig:error_jump}
+\end{figure}
+
+\subsection*{Эксперимент 2. Влияние осциллирующей правой части}
+
+Для исследования влияния осцилляций (колебаний) правой части на численное решение была рассмотрена задача Дирихле с правой частью
+\begin{equation*}
+f(x) = \sin(50\pi x),
+\end{equation*}
+нулевыми граничными условиями $u(0)=0$, $u(1)=0$ и уменьшенным коэффициентом теплопроводности 
+\begin{equation*}
+k(x) = 10^{-4}(x^2+1).
+\end{equation*}
+Остальные параметры задачи ($q(x)=x+1$) оставлены без изменений.
+
+На рисунках \ref{fig:solution_osc} и \ref{fig:error_osc} представлены результаты численного решения.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{solution_osc.png}
+    \caption{Численное и точное решения задачи с осциллирующей правой частью}
+    \label{fig:solution_osc}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{error_osc.png}
+    \caption{Оценка погрешности по правилу Рунге}
+    \label{fig:error_osc}
+\end{figure}
+
 \newpage
 \section{Реализация метода конечных разностей для задачи с граничными условиями второго рода (Неймана)}
 
-\subsection{Программная реализация на Octave}
+Рассматривается краевая задача:
+\begin{equation*}
+    -\frac{d}{dx}\left((x^2+1)\frac{du}{dx}\right) + 10(x+1)u = 10x^5 - 30x^4 + 14x^3 + 22x^2 + 36x - 2, \quad 0 < x < 1,
+\end{equation*}
+с граничными условиями Неймана:
+\begin{equation*}
+    u'(0) = \gamma = 3, \qquad u'(1) = \delta = 3.
+\end{equation*}
+Точное решение задачи:
+\begin{equation*}
+    u_{\text{exact}}(x) = x^4 - 2x^3 + x^2 + 3x.
+\end{equation*}
+Параметры задачи: $k(x)=x^2+1$, $q(x)=10(x+1)$, $f(x)=10x^5-30x^4+14x^3+22x^2+36x-2$, $\gamma=3$, $\delta=3$.
 
-Ниже приведён код решения задачи Неймана с автоматическим сгущением сетки.
-
-\begin{lstlisting}[caption={Code No.2},label={lst:neumann}]
-graphics_toolkit("gnuplot");
-
-a = 0; b = 1;
-k = @(x) x.^2 + 1;
-q = @(x) 10*(x + 1);
-f = @(x) 10*x.^5 - 30*x.^4 + 14*x.^3 + 22*x.^2 + 36*x - 2;
-
-gamma = 3;
-delta = 3;
-
-tol = 1e-4;
-N = 5;
-err_est = tol + 1;
-first = true;
-
-while err_est > tol
-    h = (b - a)/(N - 1);
-    x = linspace(a, b, N)';
-    xmid = (x(1:end-1) + x(2:end))/2;
-    
-    kmid = k(xmid);
-    qv = q(x);
-    fv = f(x);
-    
-    a_diag = zeros(N,1);
-    b_diag = zeros(N,1);
-    c_diag = zeros(N,1);
-    d_vec = zeros(N,1);
-    
-    for i = 2:N-1
-        a_diag(i-1) = -kmid(i-1)/h^2;
-        c_diag(i)   = -kmid(i)/h^2;
-        b_diag(i)   = (kmid(i-1) + kmid(i))/h^2 + qv(i);
-        d_vec(i)    = fv(i);
-    end
-    
-    k_minus_half = k(a - h/2);
-    k_plus_half  = k(a + h/2);
-    b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1);
-    c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
-    d_vec(1)  = fv(1) + 2*k_minus_half/h * gamma;
-    
-    k_minus_half = k(b - h/2);
-    k_plus_half  = k(b + h/2);
-    a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
-    b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N);
-    d_vec(N)    = fv(N) + 2*k_plus_half/h * delta;
-    
-    aa = a_diag(1:N-1);
-    cc = c_diag(1:N-1);
-    
-    n = length(d_vec);
-    bb = b_diag;
-    dd = d_vec;
-    
-    for i = 2:n
-        w = aa(i-1) / bb(i-1);
-        bb(i) = bb(i) - w * cc(i-1);
-        dd(i) = dd(i) - w * dd(i-1);
-    end
-    
-    U = zeros(n,1);
-    U(n) = dd(n) / bb(n);
-    for i = n-1:-1:1
-        U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
-    end
-    
-    if ~first
-        U_coarse = U(1:2:end);
-        err_est = max(abs(U_coarse - U_prev)) / 3;
-        fprintf('N = %d, h = %.6f, err_est = %.6e\n', N, h, err_est);
-        if err_est < tol
-            x_final = x;
-            U_final = U;
-            break;
-        end
-    else
-        first = false;
-    end
-    
-    U_prev = U;
-    N = 2*N - 1;
-end
-
-fprintf('Runge error estimate: %.6e\n', err_est);
-
-figure;
-plot(x_final, U_final, 'ro-', 'MarkerSize', 8, 'LineWidth', 1.5);
-xlabel('x'); ylabel('u(x)');
-legend('Numerical solution', 'Location', 'northwest');
-grid on;
-
-figure;
-plot(x_final(2:end-1), abs(U_final(2:end-1) - U_prev(2:2:end-1)), 'k-o');
-xlabel('x'); ylabel('Error estimate (Runge)');
-grid on;
-\end{lstlisting}
-
+Программная реализация метода для задачи Неймана приведена в Приложении 2. Ниже представлены результаты вычислительного эксперимента.
 \subsection{Результаты сгущения сетки}
 
 Процесс сгущения сетки продолжался до достижения оценки погрешности менее $\varepsilon = 10^{-4}$.
 
 \begin{table}[H]
     \centering
-    \caption{Сходимость метода при сгущении сетки}
+    \caption{Сходимость метода при сгущении сетки (задача Неймана)}
     \label{tab:convergence2}
     \begin{tabular}{ccc}
         \toprule
         $N$ & $h$ & Оценка погрешности (правило Рунге) \\
         \midrule
-        9   & 0.125000 & $2.423003 \times 10^{-2}$ \\
-        17  & 0.062500 & $6.494574 \times 10^{-3}$ \\
-        33  & 0.031250 & $1.652384 \times 10^{-3}$ \\
-        65  & 0.015625 & $4.149153 \times 10^{-4}$ \\
-        129 & 0.007812 & $1.038429 \times 10^{-4}$ \\
-        257 & 0.003906 & $2.596786 \times 10^{-5}$ \\
+        9   & 0.125000 & $6.500893 \times 10^{-3}$ \\
+        17  & 0.062500 & $1.762322 \times 10^{-3}$ \\
+        33  & 0.031250 & $4.499586 \times 10^{-4}$ \\
+        65  & 0.015625 & $1.130875 \times 10^{-4}$ \\
+        129 & 0.007812 & $2.830943 \times 10^{-5}$ \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\subsection{График численного решения}
+\newpage
+\subsection{График численного и точного решений}
 
-На рисунке~\ref{fig:solution2} представлено численное решение.
+На рисунке~\ref{fig:solution2} представлено численное и точное решения.
 
 \begin{figure}[H]
     \centering
@@ -679,141 +811,80 @@ grid on;
     \label{fig:error2}
 \end{figure}
 
+\subsection*{Эксперимент 3. Сравнение граничных условий Неймана}
+
+Исследовалось влияние граничных условий Неймана на решение при различных значениях производных на границах: $u'(0)=\gamma$ и $u'(1)=\delta$. Рассмотрены четыре комбинации: $(\gamma,\delta) = (0,0)$, $(2,0)$, $(0,2)$, $(2,2)$.
+
+На рисунках красными цветом показано численное решение, синим --- точное решение.
+
+Код программы для данного эксперимента приведён в Приложении 4.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{neumann_solutions_comparison.png}
+    \caption{Сравнение численных решений при различных граничных условиях Неймана}
+    \label{fig:neumann_solutions}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{neumann_errors_comparison.png}
+    \caption{Сравнение оценок погрешности при различных граничных условиях Неймана}
+    \label{fig:neumann_errors}
+\end{figure}
+
 \newpage
 
-\section{Реализация метода конечных разностей для задачи с граничными условиями третьего рода (Робена)}
+\section{Реализация метода конечных разностей для задачи с граничными условиями третьего рода (Робина)}
 
-\subsection{Программная реализация на Octave}
+Рассматривается краевая задача:
+\begin{equation*}
+    -\frac{d}{dx}\left((x^2+1)\frac{du}{dx}\right) + (x+1)u = x^5 - 21x^4 + 23x^3 - 14x^2 + 9x - 2, \quad 0 < x < 1,
+\end{equation*}
+с граничными условиями Робина:
+\begin{equation*}
+    \alpha_0 u(0) + \alpha_1 u'(0) = \gamma_a, \qquad \beta_0 u(1) + \beta_1 u'(1) = \gamma_b,
+\end{equation*}
+где $\alpha_0 = 1$, $\alpha_1 = 1$, $\gamma_a = 3$, $\beta_0 = 2$, $\beta_1 = 1$, $\gamma_b = 9$.
+Точное решение задачи:
+\begin{equation*}
+    u_{\text{exact}}(x) = x^4 - 2x^3 + x^2 + 3x.
+\end{equation*}
+Параметры задачи: $k(x)=x^2+1$, $q(x)=x+1$, $f(x)=x^5-21x^4+23x^3-14x^2+9x-2$, $\alpha_0=1$, $\alpha_1=1$, $\gamma_a=3$, $\beta_0=2$, $\beta_1=1$, $\gamma_b=9$.
 
-Ниже приведён код решения задачи с граничными условиями третьего рода с автоматическим сгущением сетки.
-
-\begin{lstlisting}[caption={Code No.3},label={lst:robin}]
-graphics_toolkit("gnuplot");
-
-a = 0; b = 1;
-k = @(x) x.^2 + 1;
-q = @(x) x + 1;
-f = @(x) x.^5 - 21*x.^4 + 23*x.^3 - 14*x.^2 + 9*x - 2;
-
-alpha0 = 1; alpha1 = 1; gamma_a = 3;
-beta0  = 2; beta1  = 1; gamma_b = 9;
-
-tol = 1e-4;
-N = 5;
-err_est = tol + 1;
-first = true;
-
-while err_est > tol
-    h = (b - a)/(N - 1);
-    x = linspace(a, b, N)';
-    xmid = (x(1:end-1) + x(2:end))/2;
-    
-    kmid = k(xmid);
-    qv = q(x);
-    fv = f(x);
-    
-    a_diag = zeros(N,1);
-    b_diag = zeros(N,1);
-    c_diag = zeros(N,1);
-    d_vec = zeros(N,1);
-    
-    for i = 2:N-1
-        a_diag(i-1) = -kmid(i-1)/h^2;
-        c_diag(i)   = -kmid(i)/h^2;
-        b_diag(i)   = (kmid(i-1) + kmid(i))/h^2 + qv(i);
-        d_vec(i)    = fv(i);
-    end
-    
-    k_minus_half = k(a - h/2);
-    k_plus_half  = k(a + h/2);
-    b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1) + 2*k_minus_half*alpha0/(h*alpha1);
-    c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
-    d_vec(1)  = fv(1) + 2*k_minus_half/(h*alpha1)*gamma_a;
-    
-    k_minus_half = k(b - h/2);
-    k_plus_half  = k(b + h/2);
-    a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
-    b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N) + 2*k_plus_half*beta0/(h*beta1);
-    d_vec(N)    = fv(N) + 2*k_plus_half/(h*beta1)*gamma_b;
-    
-    aa = a_diag(1:N-1);
-    cc = c_diag(1:N-1);
-    
-    n = length(d_vec);
-    bb = b_diag;
-    dd = d_vec;
-    
-    for i = 2:n
-        w = aa(i-1) / bb(i-1);
-        bb(i) = bb(i) - w * cc(i-1);
-        dd(i) = dd(i) - w * dd(i-1);
-    end
-    
-    U = zeros(n,1);
-    U(n) = dd(n) / bb(n);
-    for i = n-1:-1:1
-        U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
-    end
-    
-    if ~first
-        U_coarse = U(1:2:end);
-        err_est = max(abs(U_coarse - U_prev)) / 3;
-        fprintf('N = %d, h = %.6f, err_est = %.6e\n', N, h, err_est);
-        if err_est < tol
-            x_final = x;
-            U_final = U;
-            break;
-        end
-    else
-        first = false;
-    end
-    
-    U_prev = U;
-    N = 2*N - 1;
-end
-
-fprintf('Runge error estimate: %.6e\n', err_est);
-
-figure;
-plot(x_final, U_final, 'ro-', 'MarkerSize', 8, 'LineWidth', 1.5);
-xlabel('x'); ylabel('u(x)');
-legend('Numerical solution', 'Location', 'northwest');
-grid on;
-
-figure;
-plot(x_final(2:end-1), abs(U_final(2:end-1) - U_prev(2:2:end-1)), 'k-o');
-xlabel('x'); ylabel('Error estimate (Runge)');
-grid on;
-\end{lstlisting}
-
+Программная реализация метода для задачи Робина приведена в Приложении 3. Ниже представлены результаты вычислительного эксперимента.
 \subsection{Результаты сгущения сетки}
 
 Процесс сгущения сетки продолжался до достижения оценки погрешности менее $\varepsilon = 10^{-4}$.
 
 \begin{table}[H]
     \centering
-    \caption{Сходимость метода при сгущении сетки}
+    \caption{Сходимость метода при сгущении сетки (задача Робина)}
     \label{tab:convergence3}
     \begin{tabular}{ccc}
         \toprule
         $N$ & $h$ & Оценка погрешности (правило Рунге) \\
         \midrule
-        9   & 0.125000 & $3.838127 \times 10^{-3}$ \\
-        17  & 0.062500 & $9.819818 \times 10^{-4}$ \\
-        33  & 0.031250 & $2.469373 \times 10^{-4}$ \\
-        65  & 0.015625 & $6.182502 \times 10^{-5}$ \\
+        9   & 0.125000 & $5.700689 \times 10^{-2}$ \\
+        17  & 0.062500 & $1.392823 \times 10^{-2}$ \\
+        33  & 0.031250 & $3.462401 \times 10^{-3}$ \\
+        65  & 0.015625 & $8.643804 \times 10^{-4}$ \\
+        129 & 0.007812 & $2.160190 \times 10^{-4}$ \\
+        257 & 0.003906 & $5.399999 \times 10^{-5}$ \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\subsection{График численного решения}
 
-На рисунке~\ref{fig:solution3} представлено численное решение.
+\newpage
+\subsection{График численного и точного решений}
+
+На рисунке~\ref{fig:solution3} представлено численное и точное решения.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{solution_robin.png}
-    \caption{Численное решение задачи с условиями Робена}
+    \caption{Численное решение задачи с условиями Робина}
     \label{fig:solution3}
 \end{figure}
 
@@ -829,51 +900,903 @@ grid on;
     \label{fig:error3}
 \end{figure}
 
+\subsection*{Эксперимент 4. Зависимость количества итераций от требуемой точности}
+
+На рисунке \ref{fig:convergence_comparison} представлена зависимость числа итераций от требуемой точности. С ростом точности количество итераций увеличивается для всех трёх типов граничных условий.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{iterations_and_accuracy.png}
+    \caption{Зависимость количества итераций от требуемой точности}
+    \label{fig:convergence_comparison}
+\end{figure}
+
 \newpage
 \section*{Заключение}
 \addcontentsline{toc}{section}{Заключение}
 
-В ходе выполнения курсовой работы была реализована и исследована численная схема метода конечных разностей для решения линейной двухточечной краевой задачи для обыкновенного дифференциального уравнения второго порядка с переменными коэффициентами. Работа охватила полный цикл: от теоретического обоснования и вывода разностных формул до программной реализации в среде Octave и анализа результатов.
+В ходе выполнения курсовой работы реализован метод конечных разностей для решения линейной двухточечной краевой задачи для ОДУ второго порядка с переменными коэффициентами. Была описана математическая постановка задачи, проведён вывод разностных формул на основе интегро-интерполяционного метода (метода баланса), построена консервативная разностная схема второго порядка аппроксимации. Для решения полученной трёхдиагональной СЛАУ применён метод прогонки.
 
-Основные результаты работы можно сформулировать следующим образом:
+Для всех трёх типов граничных условий (Дирихле, Неймана, Робина) проведены вычислительные эксперименты с автоматическим сгущением сетки до достижения точности $10^{-4}$. Оценка погрешности по правилу Рунге подтвердила второй порядок сходимости разностной схемы. Построены графики численного решения и распределения оценки погрешности по узлам сетки.
 
-\begin{enumerate}
-    \item \textbf{Теоретический анализ.} Рассмотрена постановка краевой задачи с граничными условиями первого, второго и третьего рода. Приведены достаточные условия разрешимости и единственности решения ($k(x)>0$, $q(x)\ge 0$), которые гарантируют корректность задачи для всех проведённых вычислительных экспериментов.
-
-    \item \textbf{Разработка разностной схемы.} Получены конечно-разностные аппроксимации для внутренних узлов сетки и для всех трёх типов граничных условий. Для аппроксимации производных в граничных условиях использован метод фиктивных узлов (ghost nodes), что позволило единообразно строить разностные уравнения на границах и сохранить второй порядок аппроксимации. Выведенные формулы полностью соответствуют программной реализации.
-
-    \item \textbf{Программная реализация.} В среде Octave разработаны три программы, решающие краевую задачу с различными граничными условиями:
-    \begin{itemize}
-        \item задача Дирихле (граничные условия первого рода);
-        \item задача Неймана (граничные условия второго рода);
-        \item задача Робена (граничные условия третьего рода).
-    \end{itemize}
-    Во всех трёх случаях реализован алгоритм автоматического сгущения сетки с контролем точности по правилу Рунге. Требуемая точность $\varepsilon = 10^{-4}$ была достигнута для каждого типа граничных условий.
-
-    \item \textbf{Численные эксперименты.} Проведённые расчёты показали:
-    \begin{itemize}
-        \item Сходимость метода — при увеличении числа узлов сетки оценка погрешности монотонно убывает (см. таблицы \ref{tab:convergence}, \ref{tab:convergence2}, \ref{tab:convergence3}).
-        \item Порядок сходимости соответствует теоретическому $O(h^2)$, что подтверждается уменьшением ошибки примерно в 4 раза при удвоении числа узлов.
-        \item Для задачи Неймана потребовалась более мелкая сетка ($N=129$ для достижения точности $10^{-4}$) по сравнению с задачами Дирихле ($N=65$) и Робена ($N=65$), что связано с особенностями аппроксимации граничных условий второго рода.
-    \end{itemize}
-
-    \item \textbf{Оценка погрешности.} Построены графики распределения оценки погрешности по узлам сетки (рисунки \ref{fig:error}, \ref{fig:error2}, \ref{fig:error3}). Во всех случаях максимальная погрешность наблюдается во внутренней части области, а не на границах, что характерно для данного типа уравнений при заданных коэффициентах.
-
-    \item \textbf{Визуализация результатов.} Полученные численные решения представлены в виде графиков (рисунки \ref{fig:solution}, \ref{fig:solution2}, \ref{fig:solution3}).
-\end{enumerate}
-
+Требуемая точность достигнута при $N=65$ (Дирихле), $N=129$ (Неймана) и $N=257$ (Робина).
 \newpage
+
 \addcontentsline{toc}{section}{Список литературы}
 \begin{thebibliography}{99}
 
-\bibitem{demidovich} Демидович Б.П., Марон И.А., Шувалова Э.З. Численные методы анализа. — М.: Наука, 1967. — 368 с.
+\bibitem{amosov_dubinsky_kopchenova_1994} Амосов А. А., Дубинский Ю. А., Копченова Н. В. Вычислительные методы для инженеров : учеб. пособие. — М. : Высшая школа, 1994. — 544 с.
 
-\bibitem{amosov} Амосов А.А., Дубинский Ю.А., Копченова Н.В. Вычислительные методы для инженеров. — М.: Высшая школа, 1994. — 544 с.
+\bibitem{denisov_razgulin_2009} Денисов А. М., Разгулин А. В. Обыкновенные дифференциальные уравнения. Часть 2 : учеб. пособие. — М. : Факультет вычислительной математики и кибернетики МГУ им. М. В. Ломоносова, 2009. — 114 с.
 
-\bibitem{mudrov} Мудров А.Е. Численные методы для ПЭВМ на языках Бейсик, Фортран и Паскаль. — Томск: МП "РАСКО", 1991. — 272 с.
+\bibitem{balans_method} Методы построения разностных схем : учеб.-метод. материал / М. : Физический факультет МГУ им. М. В. Ломоносова, 2014. — Режим доступа: \url{https://math.phys.msu.ru/archive/2014_2015/197/metodi\%20postroeniya.pdf}.
 
-\bibitem{samarskii2} Самарский А.А., Вабищевич П.Н., Самарская Е.А. Задачи и упражнения по численным методам. — М.: Издательство МГУ, 1989. — 240 с.
+\bibitem{marchuk_methods} Марчук Г. И. Методы вычислительной математики. — 2-е изд., перераб. и доп. — М. : Наука, 1980. — 536 с.
+
+\bibitem{samarskii_gulin_1989} Самарский А. А., Гулин А. В. Численные методы : учеб. пособие для вузов. — М. : Наука, 1989. — 432 с.
 
 \end{thebibliography}
 
+\newpage
+\section*{Приложение}
+\addcontentsline{toc}{section}{Приложение}
+\subsection*{Приложение 1. Код программы для задачи Дирихле}
+\label{app:dirichlet}
+
+\begin{verbatim}
+graphics_toolkit("qt");
+
+% Определяем границы интервала
+a = 0; b = 1;
+
+% Коэффициенты дифференциального уравнения
+k = @(x) x.^2 + 1;
+q = @(x) x + 1;
+f = @(x) x.^5 - 21*x.^4 + 23*x.^3 - 14*x.^2 + 9*x - 2;
+
+% Точное решение и граничные условия
+u_exact = @(x) x.^4 - 2*x.^3 + x.^2 + 3*x;
+A = u_exact(a);
+B = u_exact(b);
+
+% Параметры метода
+tol = 1e-4;      % Требуемая точность
+N = 5;           % Начальное число узлов
+err_est = tol + 1;
+first = true;
+
+% Основной цикл автоматического сгущения сетки
+while err_est > tol
+    h = (b - a)/(N - 1);          % Шаг сетки
+    x = linspace(a, b, N)';       % Узлы сетки
+    xmid = (x(1:end-1) + x(2:end))/2;  % Середины отрезков
+
+    kmid = k(xmid);
+    qv = q(x);
+    fv = f(x);
+
+    % Заполнение трехдиагональной матрицы
+    a_diag = zeros(N,1);  % Нижняя диагональ
+    b_diag = zeros(N,1);  % Главная диагональ
+    c_diag = zeros(N,1);  % Верхняя диагональ
+    d_vec = zeros(N,1);   % Вектор правой части
+
+    % Внутренние узлы
+    for i = 2:N-1
+        a_diag(i-1) = -kmid(i-1)/h^2;
+        c_diag(i)   = -kmid(i)/h^2;
+        b_diag(i)   = (kmid(i-1) + kmid(i))/h^2 + qv(i);
+        d_vec(i)    = fv(i);
+    end
+
+    % Граничные условия (Дирихле)
+    b_diag(1) = 1; c_diag(1) = 0; d_vec(1) = A;
+    a_diag(N-1) = 0; b_diag(N) = 1; d_vec(N) = B;
+
+    % Прогонка (решение трехдиагональной системы)
+    n = length(d_vec);
+    aa = a_diag(1:n-1);
+    bb = b_diag;
+    cc = c_diag(1:n-1);
+    dd = d_vec;
+
+    % Прямой ход прогонки
+    for i = 2:n
+        w = aa(i-1) / bb(i-1);
+        bb(i) = bb(i) - w * cc(i-1);
+        dd(i) = dd(i) - w * dd(i-1);
+    end
+
+    % Обратный ход прогонки
+    U = zeros(n,1);
+    U(n) = dd(n) / bb(n);
+    for i = n-1:-1:1
+        U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
+    end
+
+    % Оценка ошибки по Рунге
+    if ~first
+        U_fine_on_coarse_nodes = U(1:2:end);  % Берем каждую вторую точку
+        err_est = max(abs(U_fine_on_coarse_nodes - U_prev)) / 3;
+        fprintf('N = %d, h = %.6f, err_est = %.6e\n', N, h, err_est);
+
+        if err_est < tol  % Достигнута нужная точность
+            x_final = x;
+            U_final = U;
+            U_prev_for_plot = U_prev;
+            x_prev_for_plot = x_prev;
+            break;
+        end
+    else
+        first = false;  % Первый шаг - просто сохраняем решение
+    end
+
+    % Удваиваем число узлов для следующей итерации
+    U_prev = U;
+    x_prev = x;
+    N = 2*N - 1;
+end
+
+fprintf('Runge error estimate: %.6e\n', err_est);
+
+% График численного и точного решения
+figure;
+plot(x_final, U_final, 'ro-', 'MarkerSize', 8, 'LineWidth', 1.5);
+hold on;
+plot(x_final, u_exact(x_final), 'b-', 'LineWidth', 1.5);
+hold off;
+xlabel('x'); ylabel('u(x)');
+legend('Numerical', 'Exact');
+grid on;
+
+% График оценки ошибки по Рунге
+figure;
+x_coarse = x_prev_for_plot;
+U_coarse = U_prev_for_plot;
+U_fine_at_coarse_nodes = U_final(1:2:end);
+
+error_estimate = abs(U_fine_at_coarse_nodes - U_coarse) / 3;
+plot(x_coarse, error_estimate, 'ko-', 'MarkerSize', 8, 'LineWidth', 1.5);
+xlabel('x'); ylabel('Error estimate (Runge)');
+grid on;
+\end{verbatim}
+
+\subsection*{Приложение 2. Код программы для задачи Неймана}
+\label{app:neumann}
+
+\begin{verbatim}
+graphics_toolkit("qt");
+
+% Определяем границы интервала
+a = 0; b = 1;
+
+% Коэффициенты дифференциального уравнения
+k = @(x) x.^2 + 1;
+q = @(x) 10*(x + 1);
+f = @(x) 10*x.^5 - 30*x.^4 + 14*x.^3 + 22*x.^2 + 36*x - 2;
+
+% Параметры граничных условий
+gamma = 3;
+delta = 3;
+
+% Параметры метода
+tol = 1e-4;      % Требуемая точность
+N = 5;           % Начальное число узлов
+err_est = tol + 1;
+first = true;
+
+% Основной цикл автоматического сгущения сетки
+while err_est > tol
+    h = (b - a)/(N - 1);          % Шаг сетки
+    x = linspace(a, b, N)';       % Узлы сетки
+    xmid = (x(1:end-1) + x(2:end))/2;  % Середины отрезков
+
+    kmid = k(xmid);
+    qv = q(x);
+    fv = f(x);
+
+    % Заполнение трехдиагональной матрицы
+    a_diag = zeros(N,1);  % Нижняя диагональ
+    b_diag = zeros(N,1);  % Главная диагональ
+    c_diag = zeros(N,1);  % Верхняя диагональ
+    d_vec = zeros(N,1);   % Вектор правой части
+
+    % Внутренние узлы 
+    for i = 2:N-1
+        a_diag(i-1) = -kmid(i-1)/h^2;
+        c_diag(i)   = -kmid(i)/h^2;
+        b_diag(i)   = (kmid(i-1) + kmid(i))/h^2 + qv(i);
+        d_vec(i)    = fv(i);
+    end
+
+    % Левое граничное условие 
+    k_minus_half = k(a - h/2);
+    k_plus_half  = k(a + h/2);
+    b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1);
+    c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
+    d_vec(1)  = fv(1) - 2*k_minus_half/h * gamma;
+
+    % Правое граничное условие 
+    k_minus_half = k(b - h/2);
+    k_plus_half  = k(b + h/2);
+    a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
+    b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N);
+    d_vec(N)    = fv(N) + 2*k_plus_half/h * delta;
+
+    % Решение системы методом прогонки
+    aa = a_diag(1:N-1);
+    cc = c_diag(1:N-1);
+    n = length(d_vec);
+    bb = b_diag;
+    dd = d_vec;
+
+    % Прямой ход прогонки
+    for i = 2:n
+        w = aa(i-1) / bb(i-1);
+        bb(i) = bb(i) - w * cc(i-1);
+        dd(i) = dd(i) - w * dd(i-1);
+    end
+
+    % Обратный ход прогонки
+    U = zeros(n,1);
+    U(n) = dd(n) / bb(n);
+    for i = n-1:-1:1
+        U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
+    end
+
+    % Оценка ошибки по Рунге 
+    if ~first
+        U_fine_on_coarse_nodes = U(1:2:end);  % Берем каждую вторую точку
+        err_est = max(abs(U_fine_on_coarse_nodes - U_prev)) / 3;
+        fprintf('N = %d, h = %.6f, err_est = %.6e\n', N, h, err_est);
+
+        if err_est < tol  % Достигнута нужная точность
+            x_final = x;
+            U_final = U;
+            U_prev_for_plot = U_prev;
+            x_prev_for_plot = x_prev;
+            break;
+        end
+    else
+        first = false;  % Первый шаг - просто сохраняем решение
+    end
+
+    % Удваиваем число узлов для следующей итерации (сгущение сетки)
+    U_prev = U;
+    x_prev = x;
+    N = 2*N - 1;
+end
+
+fprintf('Runge error estimate: %.6e\n', err_est);
+
+% График численного и точного решения
+figure;
+plot(x_final, U_final, 'ro-', 'MarkerSize', 8, 'LineWidth', 1.5);
+hold on;
+u_exact = @(x) x.^4 - 2*x.^3 + x.^2 + 3*x;
+plot(x_final, u_exact(x_final), 'b-', 'LineWidth', 1.5);
+hold off;
+xlabel('x'); ylabel('u(x)');
+legend('Numerical', 'Exact');
+grid on;
+
+% График оценки ошибки по Рунге
+figure;
+x_coarse = x_prev_for_plot;
+U_coarse = U_prev_for_plot;
+U_fine_at_coarse_nodes = U_final(1:2:end);
+error_estimate = abs(U_fine_at_coarse_nodes - U_coarse) / 3;
+plot(x_coarse, error_estimate, 'ko-', 'MarkerSize', 8, 'LineWidth', 1.5);
+xlabel('x'); ylabel('Error estimate (Runge)');
+grid on;
+\end{verbatim}
+
+\subsection*{Приложение 3. Код программы для задачи Робина}
+\label{app:robin}
+
+\begin{verbatim}
+graphics_toolkit("qt");
+
+% Определяем границы интервала
+a = 0; b = 1;
+
+% Коэффициенты дифференциального уравнения
+k = @(x) x.^2 + 1;
+q = @(x) x + 1;
+f = @(x) x.^5 - 21*x.^4 + 23*x.^3 - 14*x.^2 + 9*x - 2;
+
+% Точное решение
+u_exact = @(x) x.^4 - 2*x.^3 + x.^2 + 3*x;
+
+% Параметры граничных условий третьего рода (Робена)
+% Левая граница: alpha0*u(a) + alpha1*u'(a) = gamma_a
+% Правая граница: beta0*u(b) + beta1*u'(b) = gamma_b
+alpha0 = 1; alpha1 = 1; gamma_a = 3;
+beta0  = 2; beta1  = 1; gamma_b = 9;
+
+% Параметры метода
+tol = 1e-4;      % Требуемая точность
+N = 5;           % Начальное число узлов
+err_est = tol + 1;
+first = true;
+
+% Основной цикл автоматического сгущения сетки
+while err_est > tol
+    h = (b - a)/(N - 1);          % Шаг сетки
+    x = linspace(a, b, N)';       % Узлы сетки
+    xmid = (x(1:end-1) + x(2:end))/2;  % Середины отрезков
+
+    kmid = k(xmid);
+    qv = q(x);
+    fv = f(x);
+
+    % Заполнение трехдиагональной матрицы
+    a_diag = zeros(N,1);  % Нижняя диагональ
+    b_diag = zeros(N,1);  % Главная диагональ
+    c_diag = zeros(N,1);  % Верхняя диагональ
+    d_vec = zeros(N,1);   % Вектор правой части
+
+    % Внутренние узлы (конечно-разностная схема)
+    for i = 2:N-1
+        a_diag(i-1) = -kmid(i-1)/h^2;
+        c_diag(i)   = -kmid(i)/h^2;
+        b_diag(i)   = (kmid(i-1) + kmid(i))/h^2 + qv(i);
+        d_vec(i)    = fv(i);
+    end
+
+    % Левое граничное условие (Робена)
+    k_minus_half = k(a - h/2);
+    k_plus_half  = k(a + h/2);
+    b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1) - 2*k_minus_half*alpha0/(h*alpha1);
+    c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
+    d_vec(1)  = fv(1) - 2*k_minus_half/(h*alpha1)*gamma_a;
+
+    % Правое граничное условие (Робена)
+    k_minus_half = k(b - h/2);
+    k_plus_half  = k(b + h/2);
+    a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
+    b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N) + 2*k_plus_half*beta0/(h*beta1);
+    d_vec(N)    = fv(N) + 2*k_plus_half/(h*beta1)*gamma_b;
+
+    % Решение системы методом прогонки (Томаса)
+    aa = a_diag(1:N-1);
+    cc = c_diag(1:N-1);
+    n = length(d_vec);
+    bb = b_diag;
+    dd = d_vec;
+
+    % Прямой ход прогонки
+    for i = 2:n
+        w = aa(i-1) / bb(i-1);
+        bb(i) = bb(i) - w * cc(i-1);
+        dd(i) = dd(i) - w * dd(i-1);
+    end
+
+    % Обратный ход прогонки (нахождение решения)
+    U = zeros(n,1);
+    U(n) = dd(n) / bb(n);
+    for i = n-1:-1:1
+        U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
+    end
+
+    % Оценка ошибки по Рунге (начиная со второго шага)
+    if ~first
+        U_fine_on_coarse_nodes = U(1:2:end);
+        err_est = max(abs(U_fine_on_coarse_nodes - U_prev)) / 3;
+        fprintf('N = %d, h = %.6f, err_est = %.6e\n', N, h, err_est);
+
+        if err_est < tol  % Точность достигнута
+            x_final = x;
+            U_final = U;
+            U_prev_for_plot = U_prev;
+            x_prev_for_plot = x_prev;
+            break;
+        end
+    else
+        first = false;  % Первая итерация - только сохраняем решение
+    end
+
+    % Подготовка к следующей итерации (сгущение сетки в 2 раза)
+    U_prev = U;
+    x_prev = x;
+    N = 2*N - 1;
+end
+
+fprintf('Runge error estimate: %.6e\n', err_est);
+
+% График 1: Численное и точное решение
+figure;
+plot(x_final, U_final, 'ro-', 'MarkerSize', 8, 'LineWidth', 1.5);
+hold on;
+plot(x_final, u_exact(x_final), 'b-', 'LineWidth', 1.5);
+hold off;
+xlabel('x'); ylabel('u(x)');
+legend('Numerical solution', 'Exact solution', 'Location', 'northwest');
+grid on;
+
+% График 2: Оценка ошибки по Рунге
+figure;
+x_coarse = x_prev_for_plot;
+U_coarse = U_prev_for_plot;
+U_fine_at_coarse_nodes = U_final(1:2:end);
+error_estimate = abs(U_fine_at_coarse_nodes - U_coarse) / 3;
+plot(x_coarse, error_estimate, 'ko-', 'MarkerSize', 8, 'LineWidth', 1.5);
+xlabel('x'); ylabel('Error estimate (Runge)');
+grid on;
+\end{verbatim}
+
+\subsection*{Приложение 4. Код программы для сравнения граничных условий Неймана}
+\label{app:neumann_comparison}
+
+\begin{verbatim}
+graphics_toolkit("qt");
+
+% Определяем границы интервала
+a = 0; b = 1;
+
+% Коэффициенты
+k = @(x) x.^2 + 1;
+q = @(x) 10*(x + 1);
+f = @(x) 10*x.^5 - 30*x.^4 + 14*x.^3 + 22*x.^2 + 36*x - 2;
+
+% Параметры метода
+tol = 1e-4;
+
+% Определяем разные комбинации граничных условий
+cases = [
+    0, 0;   % Случай 1: нулевые потоки
+    2, 0;   % Случай 2: поток 2 слева, 0 справа
+    0, 2;   % Случай 3: поток 2 справа, 0 слева
+    2, 2    % Случай 4: поток 2 на обоих концах
+];
+
+% Создаем фигуру с 2x2 subplot для решений
+figure('Name', 'Сравнение граничных условий Неймана');
+
+for case_idx = 1:4
+    gamma = cases(case_idx, 1);
+    delta = cases(case_idx, 2);
+
+    N = 5;
+    err_est = tol + 1;
+    first = true;
+
+    while err_est > tol
+        h = (b - a)/(N - 1);
+        x = linspace(a, b, N)';
+        xmid = (x(1:end-1) + x(2:end))/2;
+
+        kmid = k(xmid);
+        qv = q(x);
+        fv = f(x);
+
+        a_diag = zeros(N,1);
+        b_diag = zeros(N,1);
+        c_diag = zeros(N,1);
+        d_vec = zeros(N,1);
+
+        for i = 2:N-1
+            a_diag(i-1) = -kmid(i-1)/h^2;
+            c_diag(i)   = -kmid(i)/h^2;
+            b_diag(i)   = (kmid(i-1) + kmid(i))/h^2 + qv(i);
+            d_vec(i)    = fv(i);
+        end
+
+        % Левое условие Неймана
+        k_minus_half = k(a - h/2);
+        k_plus_half  = k(a + h/2);
+        b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1);
+        c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
+        d_vec(1)  = fv(1) - 2*k_minus_half/h * gamma;
+
+        % Правое условие
+        k_minus_half = k(b - h/2);
+        k_plus_half  = k(b + h/2);
+        a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
+        b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N);
+        d_vec(N)    = fv(N) + 2*k_plus_half/h * delta;
+
+        aa = a_diag(1:N-1);
+        cc = c_diag(1:N-1);
+        n = length(d_vec);
+        bb = b_diag;
+        dd = d_vec;
+
+        for i = 2:n
+            w = aa(i-1) / bb(i-1);
+            bb(i) = bb(i) - w * cc(i-1);
+            dd(i) = dd(i) - w * dd(i-1);
+        end
+
+        U = zeros(n,1);
+        U(n) = dd(n) / bb(n);
+        for i = n-1:-1:1
+            U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
+        end
+
+        if ~first
+            U_fine_on_coarse_nodes = U(1:2:end);
+            err_est = max(abs(U_fine_on_coarse_nodes - U_prev)) / 3;
+
+            if err_est < tol
+                x_final = x;
+                U_final = U;
+                break;
+            end
+        else
+            first = false;
+        end
+
+        U_prev = U;
+        x_prev = x;
+        N = 2*N - 1;
+    end
+
+    % Подграфик
+    subplot(2, 2, case_idx);
+    plot(x_final, U_final, 'ro-', 'MarkerSize', 6, 'LineWidth', 1.2);
+    hold on;
+    u_exact = @(x) x.^4 - 2*x.^3 + x.^2 + 3*x;
+    plot(x_final, u_exact(x_final), 'b-', 'LineWidth', 1.2);
+    hold off;
+    xlabel('x'); ylabel('u(x)');
+    title(sprintf('gamma=%d, delta=%d', gamma, delta));
+    grid on;
+end
+
+% Вторая фигура: графики погрешностей
+figure('Name', 'Оценка погрешности');
+
+for case_idx = 1:4
+    gamma = cases(case_idx, 1);
+    delta = cases(case_idx, 2);
+
+    N = 5;
+    err_est = tol + 1;
+    first = true;
+
+    while err_est > tol
+        h = (b - a)/(N - 1);
+        x = linspace(a, b, N)';
+        xmid = (x(1:end-1) + x(2:end))/2;
+
+        kmid = k(xmid);
+        qv = q(x);
+        fv = f(x);
+
+        a_diag = zeros(N,1);
+        b_diag = zeros(N,1);
+        c_diag = zeros(N,1);
+        d_vec = zeros(N,1);
+
+        for i = 2:N-1
+            a_diag(i-1) = -kmid(i-1)/h^2;
+            c_diag(i)   = -kmid(i)/h^2;
+            b_diag(i)   = (kmid(i-1) + kmid(i))/h^2 + qv(i);
+            d_vec(i)    = fv(i);
+        end
+
+        k_minus_half = k(a - h/2);
+        k_plus_half  = k(a + h/2);
+        b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1);
+        c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
+        d_vec(1)  = fv(1) - 2*k_minus_half/h * gamma;
+
+        k_minus_half = k(b - h/2);
+        k_plus_half  = k(b + h/2);
+        a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
+        b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N);
+        d_vec(N)    = fv(N) + 2*k_plus_half/h * delta;
+
+        aa = a_diag(1:N-1);
+        cc = c_diag(1:N-1);
+        n = length(d_vec);
+        bb = b_diag;
+        dd = d_vec;
+
+        for i = 2:n
+            w = aa(i-1) / bb(i-1);
+            bb(i) = bb(i) - w * cc(i-1);
+            dd(i) = dd(i) - w * dd(i-1);
+        end
+
+        U = zeros(n,1);
+        U(n) = dd(n) / bb(n);
+        for i = n-1:-1:1
+            U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
+        end
+
+        if ~first
+            U_fine_on_coarse_nodes = U(1:2:end);
+            err_est = max(abs(U_fine_on_coarse_nodes - U_prev)) / 3;
+
+            if err_est < tol
+                x_final = x;
+                U_final = U;
+                U_prev_final = U_prev;
+                x_prev_final = x_prev;
+                break;
+            end
+        else
+            first = false;
+        end
+
+        U_prev = U;
+        x_prev = x;
+        N = 2*N - 1;
+    end
+
+    subplot(2, 2, case_idx);
+    x_coarse = x_prev_final;
+    U_coarse = U_prev_final;
+    U_fine_at_coarse_nodes = U_final(1:2:end);
+    error_estimate = abs(U_fine_at_coarse_nodes - U_coarse) / 3;
+    plot(x_coarse, error_estimate, 'ko-', 'MarkerSize', 6, 'LineWidth', 1.2);
+    xlabel('x'); ylabel('Error estimate');
+    title(sprintf('gamma=%d, delta=%d', gamma, delta));
+    grid on;
+end
+\end{verbatim}
+
+\subsection*{Приложение 5. Код программы для графика зависимости числа итераций от точности}
+\label{app:convergence_comparison}
+
+\begin{verbatim}
+graphics_toolkit("qt");
+
+function [U_final, x_final, iter] = solve_dirichlet(a,b,k,q,f,u_exact,A,B,tol)
+    N = 5;
+    err_est = tol + 1;
+    first = true;
+    iter = 0;
+    while err_est > tol
+        iter = iter + 1;
+        h = (b - a)/(N - 1);
+        x = linspace(a, b, N)';
+        xmid = (x(1:end-1) + x(2:end))/2;
+        kmid = k(xmid);
+        qv = q(x);
+        fv = f(x);
+        a_diag = zeros(N,1);
+        b_diag = zeros(N,1);
+        c_diag = zeros(N,1);
+        d_vec = zeros(N,1);
+        for i = 2:N-1
+            a_diag(i-1) = -kmid(i-1)/h^2;
+            c_diag(i)   = -kmid(i)/h^2;
+            b_diag(i)   = (kmid(i-1) + kmid(i))/h^2 + qv(i);
+            d_vec(i)    = fv(i);
+        end
+        b_diag(1) = 1; c_diag(1) = 0; d_vec(1) = A;
+        a_diag(N-1) = 0; b_diag(N) = 1; d_vec(N) = B;
+        n = length(d_vec);
+        aa = a_diag(1:n-1);
+        bb = b_diag;
+        cc = c_diag(1:n-1);
+        dd = d_vec;
+        for i = 2:n
+            w = aa(i-1) / bb(i-1);
+            bb(i) = bb(i) - w * cc(i-1);
+            dd(i) = dd(i) - w * dd(i-1);
+        end
+        U = zeros(n,1);
+        U(n) = dd(n) / bb(n);
+        for i = n-1:-1:1
+            U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
+        end
+        if ~first
+            U_fine_on_coarse_nodes = U(1:2:end);
+            err_est = max(abs(U_fine_on_coarse_nodes - U_prev)) / 3;
+            if err_est < tol
+                U_final = U;
+                x_final = x;
+                return;
+            end
+        else
+            first = false;
+        end
+        U_prev = U;
+        x_prev = x;
+        N = 2*N - 1;
+    end
+    U_final = U;
+    x_final = x;
+end
+
+function [U_final, x_final, iter] = solve_neumann(a,b,k,q,f,gamma,delta,tol)
+    N = 5;
+    err_est = tol + 1;
+    first = true;
+    iter = 0;
+    while err_est > tol
+        iter = iter + 1;
+        h = (b - a)/(N - 1);
+        x = linspace(a, b, N)';
+        xmid = (x(1:end-1) + x(2:end))/2;
+        kmid = k(xmid);
+        qv = q(x);
+        fv = f(x);
+        a_diag = zeros(N,1);
+        b_diag = zeros(N,1);
+        c_diag = zeros(N,1);
+        d_vec = zeros(N,1);
+        for i = 2:N-1
+            a_diag(i-1) = -kmid(i-1)/h^2;
+            c_diag(i)   = -kmid(i)/h^2;
+            b_diag(i)   = (kmid(i-1) + kmid(i))/h^2 + qv(i);
+            d_vec(i)    = fv(i);
+        end
+        k_minus_half = k(a - h/2);
+        k_plus_half  = k(a + h/2);
+        b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1);
+        c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
+        d_vec(1)  = fv(1) - 2*k_minus_half/h * gamma;
+        k_minus_half = k(b - h/2);
+        k_plus_half  = k(b + h/2);
+        a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
+        b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N);
+        d_vec(N)    = fv(N) + 2*k_plus_half/h * delta;
+        aa = a_diag(1:N-1);
+        cc = c_diag(1:N-1);
+        n = length(d_vec);
+        bb = b_diag;
+        dd = d_vec;
+        for i = 2:n
+            w = aa(i-1) / bb(i-1);
+            bb(i) = bb(i) - w * cc(i-1);
+            dd(i) = dd(i) - w * dd(i-1);
+        end
+        U = zeros(n,1);
+        U(n) = dd(n) / bb(n);
+        for i = n-1:-1:1
+            U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
+        end
+        if ~first
+            U_fine_on_coarse_nodes = U(1:2:end);
+            err_est = max(abs(U_fine_on_coarse_nodes - U_prev)) / 3;
+            if err_est < tol
+                U_final = U;
+                x_final = x;
+                return;
+            end
+        else
+            first = false;
+        end
+        U_prev = U;
+        x_prev = x;
+        N = 2*N - 1;
+    end
+    U_final = U;
+    x_final = x;
+end
+
+function [U_final, x_final, iter] = solve_robin(a,b,k,q,f,alpha0,alpha1,gamma_a,beta0,beta1,gamma_b,tol)
+    N = 5;
+    err_est = tol + 1;
+    first = true;
+    iter = 0;
+    while err_est > tol
+        iter = iter + 1;
+        h = (b - a)/(N - 1);
+        x = linspace(a, b, N)';
+        xmid = (x(1:end-1) + x(2:end))/2;
+        kmid = k(xmid);
+        qv = q(x);
+        fv = f(x);
+        a_diag = zeros(N,1);
+        b_diag = zeros(N,1);
+        c_diag = zeros(N,1);
+        d_vec = zeros(N,1);
+        for i = 2:N-1
+            a_diag(i-1) = -kmid(i-1)/h^2;
+            c_diag(i)   = -kmid(i)/h^2;
+            b_diag(i)   = (kmid(i-1) + kmid(i))/h^2 + qv(i);
+            d_vec(i)    = fv(i);
+        end
+        k_minus_half = k(a - h/2);
+        k_plus_half  = k(a + h/2);
+        b_diag(1) = (k_minus_half + k_plus_half)/h^2 + qv(1) - 2*k_minus_half*alpha0/(h*alpha1);
+        c_diag(1) = -(k_minus_half + k_plus_half)/h^2;
+        d_vec(1)  = fv(1) - 2*k_minus_half/(h*alpha1)*gamma_a;
+        k_minus_half = k(b - h/2);
+        k_plus_half  = k(b + h/2);
+        a_diag(N-1) = -(k_minus_half + k_plus_half)/h^2;
+        b_diag(N)   = (k_minus_half + k_plus_half)/h^2 + qv(N) + 2*k_plus_half*beta0/(h*beta1);
+        d_vec(N)    = fv(N) + 2*k_plus_half/(h*beta1)*gamma_b;
+        aa = a_diag(1:N-1);
+        cc = c_diag(1:N-1);
+        n = length(d_vec);
+        bb = b_diag;
+        dd = d_vec;
+        for i = 2:n
+            w = aa(i-1) / bb(i-1);
+            bb(i) = bb(i) - w * cc(i-1);
+            dd(i) = dd(i) - w * dd(i-1);
+        end
+        U = zeros(n,1);
+        U(n) = dd(n) / bb(n);
+        for i = n-1:-1:1
+            U(i) = (dd(i) - cc(i) * U(i+1)) / bb(i);
+        end
+        if ~first
+            U_fine_on_coarse_nodes = U(1:2:end);
+            err_est = max(abs(U_fine_on_coarse_nodes - U_prev)) / 3;
+            if err_est < tol
+                U_final = U;
+                x_final = x;
+                return;
+            end
+        else
+            first = false;
+        end
+        U_prev = U;
+        x_prev = x;
+        N = 2*N - 1;
+    end
+    U_final = U;
+    x_final = x;
+end
+
+% Параметры задач (менять здесь)
+a = 0; b = 1;
+
+% Дирихле
+k_D = @(x) x.^2 + 1;
+q_D = @(x) x + 1;
+f_D = @(x) x.^5 - 21*x.^4 + 23*x.^3 - 14*x.^2 + 9*x - 2;
+u_exact_D = @(x) x.^4 - 2*x.^3 + x.^2 + 3*x;
+A = u_exact_D(a); B = u_exact_D(b);
+
+% Неймана
+k_N = @(x) x.^2 + 1;
+q_N = @(x) 10*(x + 1);
+f_N = @(x) 10*x.^5 - 30*x.^4 + 14*x.^3 + 22*x.^2 + 36*x - 2;
+gamma = 3; delta = 3;
+
+% Робина
+k_R = @(x) x.^2 + 1;
+q_R = @(x) x + 1;
+f_R = @(x) x.^5 - 21*x.^4 + 23*x.^3 - 14*x.^2 + 9*x - 2;
+alpha0 = 1; alpha1 = 1; gamma_a = 3;
+beta0 = 2; beta1 = 1; gamma_b = 9;
+
+tol_list = [1e-3, 1e-4, 1e-5, 1e-6, 1e-7];
+iter_D = zeros(length(tol_list), 1);
+iter_N = zeros(length(tol_list), 1);
+iter_R = zeros(length(tol_list), 1);
+
+for i = 1:length(tol_list)
+    [~, ~, iter_D(i)] = solve_dirichlet(a,b,k_D,q_D,f_D,u_exact_D,A,B,tol_list(i));
+    [~, ~, iter_N(i)] = solve_neumann(a,b,k_N,q_N,f_N,gamma,delta,tol_list(i));
+    [~, ~, iter_R(i)] = solve_robin(a,b,k_R,q_R,f_R,alpha0,alpha1,gamma_a,beta0,beta1,gamma_b,tol_list(i));
+end
+
+figure;
+subplot(1,3,1);
+semilogx(tol_list, iter_D, 'ro-', 'MarkerSize', 8, 'LineWidth', 1.5);
+set(gca, 'XDir', 'reverse');
+xlabel('Точность');
+ylabel('Количество итераций');
+title('Дирихле');
+grid on;
+set(gca, 'XMinorGrid', 'off');
+
+subplot(1,3,2);
+semilogx(tol_list, iter_N, 'bo-', 'MarkerSize', 8, 'LineWidth', 1.5);
+set(gca, 'XDir', 'reverse');
+xlabel('Точность');
+ylabel('Количество итераций');
+title('Неймана');
+grid on;
+set(gca, 'XMinorGrid', 'off');
+
+subplot(1,3,3);
+semilogx(tol_list, iter_R, 'go-', 'MarkerSize', 8, 'LineWidth', 1.5);
+set(gca, 'XDir', 'reverse');
+xlabel('Точность');
+ylabel('Количество итераций');
+title('Робина');
+grid on;
+set(gca, 'XMinorGrid', 'off');
+\end{verbatim}
 \end{document}
